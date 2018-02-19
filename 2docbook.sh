@@ -8,21 +8,24 @@
 #
 # docbook2man {-o <dir> | --cwd}  PROGRAM...
 # docbook2man {-o <dir> | --cwd} {-a | --all}
+# docbook2man {-o <dir> | --cwd} {--input-file <file> | -i <file>}...
+# docbook2man {-o <dir> | --cwd} --input-dir <dir>
 
 # Dependencies
 #
 # gunzip, doclifter
 
 manvol=""
-mandir=""
+inputdir=""
 pkgmgr=""
 outputdir=""
 genall=false
 programs=()
+inputfiles=()
 
 setManVol() {
   manvol="$1"
-  mandir="/usr/share/man/man$1/"
+  inputdir="/usr/share/man/man$1/"
 }
 
 initPkgMgr() {
@@ -71,6 +74,17 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -i|--input-file)
+    inputfiles+=("$2")
+    shift # past argument
+    shift # past value
+    ;;
+    --input-dir)
+    inputdir="$2"
+    genall=true
+    shift # past argument
+    shift # past value
+    ;;
     --cwd)
     outputdir=$(pwd)
     shift # past argument
@@ -87,13 +101,13 @@ esac
 done
 }
 
-checkOutput() {
-  if [[ $outputdir = "" ]] ; then
-    echoerr "missing output directory ; set it with --output-dir or --cwd options"
+checkDir() {
+  if [[ $1 = "" ]] ; then
+    echoerr "missing $2 directory; $3"
     exit 1
   fi
-  if [[ ! -d $outputdir ]] ; then
-    echoerr "$outputdir is not a directory"
+  if [[ ! -d $1 ]] ; then
+    echoerr "$2 '$1' is not a directory"
     exit 1
   fi
 }
@@ -101,7 +115,7 @@ checkOutput() {
 checkPrograms() {
   if [[ $genall = false ]] ; then
     for prog in "${programs[@]}" ; do
-      manpath="$mandir/$prog.$manvol.gz"
+      manpath="$inputdir/$prog.$manvol.gz"
       if [[ ! -e $manpath ]] ; then
         echoerr "Couldn't find a manpage for program '$prog' at '$manpath'"
         exit 1
@@ -110,26 +124,46 @@ checkPrograms() {
   fi
 }
 
+checkInputFiles() {
+  if [[ ${#inputfiles[@]} -gt 0 ]] ; then
+    for file in "${inputfiles[@]}" ; do
+      if [[ ! -e $file ]] ; then
+        echoerr "Couldn't find the file '$file'"
+        exit 1
+      fi
+    done
+  fi
+}
+
 checkArguments() {
-  checkOutput
+  checkDir "$inputdir"  "input"
+  checkDir "$outputdir" "output" "set it with --output-dir or --cwd options"
   checkPrograms
+  checkInputFiles
 }
 
 # $1 : program name
 generateDocBook() {
   progname=$(basename "$1")
-  progname=${progname%.*}
-  gunzip -c "$1" | doclifter -v -e US-ASCII > "$outputdir/$progname.xml"
+  if [ "${progname: -3}" == ".gz" ]; then
+    progname=${progname%.*}
+    gunzip -c "$1" | doclifter -v -e US-ASCII > "$outputdir/$progname.xml"
+  else # don't gunzip
+    doclifter -v -e US-ASCII > "$outputdir/$progname.xml" < "$1"
+  fi
 }
 
 genFiles() {
   if [[ $genall = false ]] ; then
     for prog in "${programs[@]}" ; do
-      manpath="$mandir/$prog.$manvol.gz"
+      manpath="$inputdir/$prog.$manvol.gz"
       generateDocBook "$manpath"
     done
+    for file in "${inputfiles[@]}" ; do
+        generateDocBook "$file"
+    done
   else
-    for file in $mandir/* ; do
+    for file in $inputdir/* ; do
       generateDocBook "$file"
     done
   fi
