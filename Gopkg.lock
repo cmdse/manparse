@@ -2,16 +2,42 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/cmdse/core"
+  packages = ["schema"]
+  revision = "93a223dafcb680f89d250ab0c6d58613fff39046"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
 
 [[projects]]
-  name = "github.com/oleiade/lane"
-  packages = ["."]
-  revision = "28f7c3f09254f12b51e620fa4db136ba58804762"
-  version = "v1.0.0"
+  name = "github.com/onsi/ginkgo"
+  packages = [
+    ".",
+    "config",
+    "extensions/table",
+    "internal/codelocation",
+    "internal/containernode",
+    "internal/failer",
+    "internal/leafnodes",
+    "internal/remote",
+    "internal/spec",
+    "internal/spec_iterator",
+    "internal/specrunner",
+    "internal/suite",
+    "internal/testingtproxy",
+    "internal/writer",
+    "reporters",
+    "reporters/stenographer",
+    "reporters/stenographer/support/go-colorable",
+    "reporters/stenographer/support/go-isatty",
+    "types"
+  ]
+  revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
+  version = "v1.4.0"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -28,6 +54,12 @@
     "html/charset"
   ]
   revision = "136a25c244d3019482a795d728110278d6ba09a4"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "37707fdb30a5b38865cfb95e5aab41707daec7fd"
 
 [[projects]]
   branch = "master"
@@ -56,6 +88,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "19a8a50fa842f96530bc357e4c9d724aa067c4fe6f1d2182c579f537ed749a1f"
+  inputs-digest = "8c18b0635e68546c7f36a2a44a4a789cfe32e8fe138231ebbe40d1374c84bd87"
   solver-name = "gps-cdcl"
   solver-version = 1
