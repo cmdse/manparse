@@ -15,6 +15,7 @@ func (elements *Nodes) Append(node *Node) {
 	*elements = append(*elements, node)
 }
 
+// http://tdg.docbook.org/tdg/4.5/refsect1.html
 type Section struct {
 	XMLName  xml.Name `xml:"refsect1"`
 	Children Nodes    `xml:",any"`

@@ -51,15 +51,7 @@ func (node *Node) handleCharData(charData xml.CharData) {
 	}
 }
 
-var tokentypes = map[string]bool{}
-
 func (node *Node) handleNode(d *xml.Decoder, start xml.StartElement) (err error) {
-	_, ok := tokentypes[start.Name.Local]
-	if !ok {
-		fmt.Printf("%v\n", start.Name.Local)
-	}
-	tokentypes[start.Name.Local] = true
-
 	childNode := &Node{start.Name.Local, nil, Nodes{}}
 	err = d.DecodeElement(childNode, &start)
 	node.Children.Append(childNode)
