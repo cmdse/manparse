@@ -1,6 +1,12 @@
 package schema
 
-import "regexp"
+import (
+	"fmt"
+	"regexp"
+	"strings"
+
+	"github.com/pkg/errors"
+)
 
 type OptExpressionVariant struct {
 	style              OptionStyle
@@ -10,10 +16,18 @@ type OptExpressionVariant struct {
 	flagTokenType      *SemanticTokenType
 	// can be nil when opt expression contains one token only
 	optValueTokenType *SemanticTokenType
+	name              string
 }
 
-func (optVariant *OptExpressionVariant) Assemble(expression OptionParts) *OptionExpression {
-	return optVariant.assemblyModel.Assemble(expression, optVariant.assemblyRegex)
+// Assemble groups a token list of one or two tokens forming a "group part" to an option expression.
+func (optVariant *OptExpressionVariant) Assemble(groupParts TokenList) (*OptionExpression, error) {
+	if len(groupParts) < 1 {
+		return nil, errors.New("assemble must receive a non-empty TokenList")
+	}
+	if groupParts[0].Ttype.Variant() != optVariant {
+		return nil, fmt.Errorf("assemble must receive a TokenList which token type variants match %v variant", optVariant.name)
+	}
+	return optVariant.assemblyModel.Assemble(groupParts, optVariant)
 }
 
 func (optVariant *OptExpressionVariant) FlagTokenType() *SemanticTokenType {
@@ -24,23 +38,39 @@ func (optVariant *OptExpressionVariant) OptValueTokenType() *SemanticTokenType {
 	return optVariant.optValueTokenType
 }
 
-// Build a regex given a flag name and optional param
-// empty string stands for no param, or default matcher
-func (optVariant *OptExpressionVariant) Build(flag string, param string) *regexp.Regexp {
+func (optVariant *OptExpressionVariant) Name() string {
+	return optVariant.name
+}
+
+func safeStringList(stringList []string) []string {
+	buffer := make([]string, len(stringList))
+	for i, str := range stringList {
+		buffer[i] = regexp.QuoteMeta(str)
+	}
+	return buffer
+}
+
+// Build a leftSideRegex given a flagName name and a list paramAllowedValues.
+// When paramAllowedValues is non-zero, it is evaluated as the concatenation of possible values a|b|c ... etc
+func (optVariant *OptExpressionVariant) Build(flagName string, paramList []string) *regexp.Regexp {
 	switch optVariant.assemblyModel.atype {
 	case AssmbTypeFlagStack, AssmbTypeFlag:
-		if param != "" {
-			panic("Cannot give a param argument when Assembly Type is 'Flag'")
+		if len(paramList) > 0 {
+			panic("Cannot give a paramList argument when Assembly Type is 'flag'")
 		}
 	}
-	regex, err := optVariant.assemblyRegBuilder.Build(regexp.QuoteMeta(flag), param)
+	paramRegex := ""
+	if len(paramList) > 0 {
+		paramRegex = strings.Join(safeStringList(paramList), "|")
+	}
+	regex, err := optVariant.assemblyRegBuilder.Build(regexp.QuoteMeta(flagName), paramRegex)
 	if err != nil {
 		panic(err)
 	}
 	return regex
 }
 
-func NewOptExpressionVariant(style OptionStyle, builder *ParametricRegexBuilder, model *ExprAssemblyModel) *OptExpressionVariant {
+func NewOptExpressionVariant(style OptionStyle, builder *ParametricRegexBuilder, model *ExprAssemblyModel, name string) *OptExpressionVariant {
 	return &OptExpressionVariant{
 		style:              style,
 		assemblyRegex:      builder.BuildDefault(),
@@ -48,25 +78,43 @@ func NewOptExpressionVariant(style OptionStyle, builder *ParametricRegexBuilder,
 		assemblyModel:      model,
 		flagTokenType:      nil,
 		optValueTokenType:  nil,
+		name:               name,
 	}
 }
 
 var (
-	VariantPOSIXShortSwitch          = NewOptExpressionVariant(OptStylePOSIX, RegBuilderOneDashLetter, AssmbModelFlag)
-	VariantPOSIXStackedShortSwitches = NewOptExpressionVariant(OptStylePOSIX, RegBuilderOneDashWordAlphaNum, AssmbModelFlagStack)
-	VariantPOSIXShortAssignment      = NewOptExpressionVariant(OptStylePOSIX, RegBuilderOneDashLetter, AssmbModelGroup)
-	VariantPOSIXShortStickyValue     = NewOptExpressionVariant(OptStylePOSIX, RegBuilderPosixShortStickyValue, AssmbModelSplit)
-	VariantX2lktSwitch               = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderOneDashWord, AssmbModelFlag)
-	VariantX2lktReverseSwitch        = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderX2lktReverseSwitch, AssmbModelFlag)
-	VariantX2lktImplicitAssignment   = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderX2lktReverseSwitch, AssmbModelGroup)
-	VariantX2lktExplicitAssignment   = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderX2lktExplicitAssignment, AssmbModelSplit)
-	VariantGNUSwitch                 = NewOptExpressionVariant(OptStyleGNU, RegBuilderTwoDashWord, AssmbModelFlag)
-	VariantGNUImplicitAssignment     = NewOptExpressionVariant(OptStyleGNU, RegBuilderTwoDashWord, AssmbModelGroup)
-	VariantGNUExplicitAssignment     = NewOptExpressionVariant(OptStyleGNU, RegBuilderGnuExplicitAssignment, AssmbModelSplit)
-	VariantHeadlessOption            = NewOptExpressionVariant(OptStyleOld, RegBuilderOptWord, AssmbModelFlag)
+	VariantPOSIXShortSwitch          = NewOptExpressionVariant(OptStylePOSIX, RegBuilderOneDashLetter, AssmbModelFlag, "VariantPOSIXShortSwitch")
+	VariantPOSIXStackedShortSwitches = NewOptExpressionVariant(OptStylePOSIX, RegBuilderOneDashWordAlphaNum, AssmbModelFlagStack, "VariantPOSIXStackedShortSwitches")
+	VariantPOSIXShortAssignment      = NewOptExpressionVariant(OptStylePOSIX, RegBuilderOneDashLetter, AssmbModelGroup, "VariantPOSIXShortAssignment")
+	VariantPOSIXShortStickyValue     = NewOptExpressionVariant(OptStylePOSIX, RegBuilderPosixShortStickyValue, AssmbModelSplit, "VariantPOSIXShortStickyValue")
+	VariantX2lktSwitch               = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderOneDashWord, AssmbModelFlag, "VariantX2lktSwitch")
+	VariantX2lktReverseSwitch        = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderX2lktReverseSwitch, AssmbModelFlag, "VariantX2lktReverseSwitch")
+	VariantX2lktImplicitAssignment   = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderOneDashWord, AssmbModelGroup, "VariantX2lktImplicitAssignment")
+	VariantX2lktExplicitAssignment   = NewOptExpressionVariant(OptStyleXToolkit, RegBuilderX2lktExplicitAssignment, AssmbModelSplit, "VariantX2lktExplicitAssignment")
+	VariantGNUSwitch                 = NewOptExpressionVariant(OptStyleGNU, RegBuilderTwoDashWord, AssmbModelFlag, "VariantGNUSwitch")
+	VariantGNUImplicitAssignment     = NewOptExpressionVariant(OptStyleGNU, RegBuilderTwoDashWord, AssmbModelGroup, "VariantGNUImplicitAssignment")
+	VariantGNUExplicitAssignment     = NewOptExpressionVariant(OptStyleGNU, RegBuilderGnuExplicitAssignment, AssmbModelSplit, "VariantGNUExplicitAssignment")
+	VariantHeadlessOption            = NewOptExpressionVariant(OptStyleOld, RegBuilderOptWord, AssmbModelFlag, "VariantHeadlessOption")
 	VariantEndOfOptions              = &OptExpressionVariant{
 		style:         OptStyleNone,
 		assemblyRegex: RegexEndOfOptions,
-		assemblyModel: AssmbModelFlag,
+		assemblyModel: AssmModelNone,
+		name:          "VariantEndOfOptions",
 	}
 )
+
+var Variants = []*OptExpressionVariant{
+	VariantPOSIXShortSwitch,
+	VariantPOSIXStackedShortSwitches,
+	VariantPOSIXShortAssignment,
+	VariantPOSIXShortStickyValue,
+	VariantX2lktSwitch,
+	VariantX2lktReverseSwitch,
+	VariantX2lktImplicitAssignment,
+	VariantX2lktExplicitAssignment,
+	VariantGNUSwitch,
+	VariantGNUImplicitAssignment,
+	VariantGNUExplicitAssignment,
+	VariantHeadlessOption,
+	VariantEndOfOptions,
+}

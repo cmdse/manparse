@@ -22,8 +22,12 @@ func (tokenType *ContextFreeTokenType) Name() string {
 	return tokenType.name
 }
 
+func (tokenType *ContextFreeTokenType) Variant() *OptExpressionVariant {
+	return nil
+}
+
 func (tokenType *ContextFreeTokenType) String() string {
-	return tokenType.name
+	return tokenType.Name()
 }
 
 func (tokenType *ContextFreeTokenType) Equal(comparedTType TokenType) bool {

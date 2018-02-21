@@ -1,6 +1,9 @@
 package parse
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/cmdse/core/schema"
 	"github.com/cmdse/manparse/docbook/section"
 )
@@ -21,7 +24,12 @@ func (parser *SectionParser) ExtractModel(sec *section.Section) schema.OptDescri
 func (parser *SectionParser) parseExtracts(extracts rawOptExtracts) schema.OptDescriptionModel {
 	var model = make(schema.OptDescriptionModel, 0, 10)
 	for _, extract := range extracts {
-		model = append(model, extractToOptDescription(extract))
+		optDescription, err := extractToOptDescription(extract)
+		if err != nil {
+			model = append(model, optDescription)
+		} else {
+			fmt.Fprint(os.Stderr, err)
+		}
 	}
 	return model
 }

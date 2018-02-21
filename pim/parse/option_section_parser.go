@@ -105,8 +105,9 @@ func matchSiblingPattern(current *section.Node, next *section.Node) bool {
 
 func aggregateSiblingsToExtract(nodes section.Nodes) rawOptExtracts {
 	rawOptExtracts := make(rawOptExtracts, 0, 15)
-	skip := 1
-	for index := 0; index < len(nodes); index = index + skip {
+	var skip = new(int)
+	*skip = 1
+	for index := 0; index < len(nodes); index = index + *skip {
 		node := nodes[index]
 		sibling := nodes[index+1]
 		if matchSiblingPattern(node, sibling) {
@@ -115,11 +116,11 @@ func aggregateSiblingsToExtract(nodes section.Nodes) rawOptExtracts {
 				optDescription: sibling,
 			}
 			rawOptExtracts = append(rawOptExtracts, extract)
-			skip = 2
+			*skip = 2
 			break
 		}
 	}
-	skip = 1
+	*skip = 1
 	return rawOptExtracts
 }
 

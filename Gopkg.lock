@@ -2,10 +2,12 @@
 
 
 [[projects]]
-  branch = "master"
   name = "github.com/cmdse/core"
-  packages = ["schema"]
-  revision = "93a223dafcb680f89d250ab0c6d58613fff39046"
+  packages = [
+    "argparse",
+    "schema"
+  ]
+  revision = "af899ac569992e3fb444708ea43c34c8601f70aa"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -36,8 +38,26 @@
     "reporters/stenographer/support/go-isatty",
     "types"
   ]
-  revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
-  version = "v1.4.0"
+  revision = "9008c7b79f9636c46a0a945141020124702f0ecf"
+
+[[projects]]
+  name = "github.com/onsi/gomega"
+  packages = [
+    ".",
+    "format",
+    "internal/assertion",
+    "internal/asyncassertion",
+    "internal/oraclematcher",
+    "internal/testingtsupport",
+    "matchers",
+    "matchers/support/goraph/bipartitegraph",
+    "matchers/support/goraph/edge",
+    "matchers/support/goraph/node",
+    "matchers/support/goraph/util",
+    "types"
+  ]
+  revision = "003f63b7f4cff3fc95357005358af2de0f5fe152"
+  version = "v1.3.0"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -85,9 +105,15 @@
   ]
   revision = "4e4a3210bb54bb31f6ab2cdca2edcc0b50c420c1"
 
+[[projects]]
+  branch = "v2"
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "d670f9405373e636a5a2765eea47fac0c9bc91a4"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8c18b0635e68546c7f36a2a44a4a789cfe32e8fe138231ebbe40d1374c84bd87"
+  inputs-digest = "cf494bacf351755eb57715ef683831bb924d98ca4ed0f5b3b1f0b80e64ab1120"
   solver-name = "gps-cdcl"
   solver-version = 1

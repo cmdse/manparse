@@ -34,10 +34,6 @@
   unused-packages = true
 
 [[constraint]]
-  name = "github.com/oleiade/lane"
-  version = "1.0.0"
-
-[[constraint]]
   name = "github.com/davecgh/go-spew"
   version = "1.1.0"
 
@@ -47,4 +43,9 @@
 
 [[constraint]]
   name = "github.com/onsi/ginkgo"
-  version = "1.4.0"
+  revision = "9008c7b79f9636c46a0a945141020124702f0ecf"
+
+
+[[constraint]]
+  name = "github.com/cmdse/core"
+  revision = "af899ac569992e3fb444708ea43c34c8601f70aa"
