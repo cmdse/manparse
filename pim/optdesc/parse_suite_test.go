@@ -1,4 +1,4 @@
-package parse_test
+package optdesc_test
 
 import (
 	"testing"

@@ -1,11 +1,11 @@
-package parse
+package extractor
 
 import (
 	"fmt"
 	"regexp"
 
 	"github.com/cmdse/core/schema"
-	"github.com/cmdse/manparse/docbook/section"
+	"github.com/cmdse/manparse/pim/optdesc/normalize"
 )
 
 var whitespacesRegex = regexp.MustCompile(`\s+`)
@@ -35,7 +35,7 @@ func tokensToMatchModel(optParts schema.TokenList) (*schema.MatchModel, error) {
 
 func matchModelsFromSynopsisString(synopsis string) (schema.MatchModels, error) {
 	models := make(schema.MatchModels, 0, 2)
-	expressions := normalizeOptSynopsises(splitSynopsis(synopsis))
+	expressions := normalize.NormalizeOptSynopsises(splitSynopsis(synopsis))
 	for _, expr := range expressions {
 		args := whitespacesRegex.Split(expr, -1)
 		tokens := ParseOptSynopsis(args)
@@ -49,12 +49,8 @@ func matchModelsFromSynopsisString(synopsis string) (schema.MatchModels, error) 
 	return models, nil
 }
 
-func matchModelsFromSection(synopsis *section.Node) (schema.MatchModels, error) {
-	return matchModelsFromSynopsisString(synopsis.Flatten())
-}
-
-func extractToOptDescription(extract *rawOptExtract) (*schema.OptDescription, error) {
-	matchModels, err := matchModelsFromSection(extract.optSynopsis)
+func ExtractToOptDescription(extract *RawOptExtract) (*schema.OptDescription, error) {
+	matchModels, err := matchModelsFromSynopsisString(extract.optSynopsis.Flatten())
 	if err != nil {
 		return nil, err
 	}

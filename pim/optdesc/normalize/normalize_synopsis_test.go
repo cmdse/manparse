@@ -1,4 +1,4 @@
-package parse
+package normalize
 
 import (
 	. "github.com/onsi/ginkgo"

@@ -1,4 +1,4 @@
-package parse
+package optdesc
 
 import (
 	"fmt"
@@ -6,11 +6,12 @@ import (
 
 	"github.com/cmdse/core/schema"
 	"github.com/cmdse/manparse/docbook/section"
+	"github.com/cmdse/manparse/pim/optdesc/extractor"
 )
 
 type SectionParser struct {
 	TargetSection     string
-	aggregateExtracts func(*SectionParser, *section.Section) rawOptExtracts
+	aggregateExtracts func(*SectionParser, *section.Section) extractor.RawOptExtracts
 }
 
 func (parser *SectionParser) ExtractModel(sec *section.Section) schema.OptDescriptionModel {
@@ -21,10 +22,10 @@ func (parser *SectionParser) ExtractModel(sec *section.Section) schema.OptDescri
 	return parser.parseExtracts(rawExtracts)
 }
 
-func (parser *SectionParser) parseExtracts(extracts rawOptExtracts) schema.OptDescriptionModel {
+func (parser *SectionParser) parseExtracts(extracts extractor.RawOptExtracts) schema.OptDescriptionModel {
 	var model = make(schema.OptDescriptionModel, 0, 10)
 	for _, extract := range extracts {
-		optDescription, err := extractToOptDescription(extract)
+		optDescription, err := extractor.ExtractToOptDescription(extract)
 		if err != nil {
 			model = append(model, optDescription)
 		} else {

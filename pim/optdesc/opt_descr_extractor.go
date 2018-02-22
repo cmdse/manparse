@@ -1,14 +1,16 @@
-package pim
+package optdesc
 
 import (
 	"github.com/cmdse/core/schema"
 	"github.com/cmdse/manparse/docbook"
 	"github.com/cmdse/manparse/docbook/section"
-	"github.com/cmdse/manparse/pim/parse"
 )
 
+const optionSectionName = "OPTIONS"
+const descriptionSectionName = "DESCRIPTION"
+
 func secTitleIsOptionsCandidate(sec section.Section) bool {
-	return sec.Title == "OPTIONS" || sec.Title == "DESCRIPTION"
+	return sec.Title == optionSectionName || sec.Title == descriptionSectionName
 }
 
 func makeCandidates(docbook *docbook.ManDocBookXml) []*section.Section {
@@ -22,12 +24,12 @@ func makeCandidates(docbook *docbook.ManDocBookXml) []*section.Section {
 }
 
 func extractOptDescriptionFromSection(sec *section.Section) (model schema.OptDescriptionModel) {
-	var parser parse.SectionParser
+	var parser SectionParser
 	switch sec.Title {
-	case "OPTIONS":
-		parser = parse.OptionSectionParser
-	case "DESCRIPTION":
-		parser = parse.DescriptionSectionParser
+	case optionSectionName:
+		parser = OptionSectionParser
+	case descriptionSectionName:
+		parser = DescriptionSectionParser
 	}
 	model = parser.ExtractModel(sec)
 	return model
@@ -41,7 +43,7 @@ func ExtractOptDescription(docbook *docbook.ManDocBookXml) (model schema.OptDesc
 	for _, can := range candidates {
 		//model = ExtractModel(can)
 		bestMatch = can
-		if can.Title == "OPTIONS" {
+		if can.Title == optionSectionName {
 			// OPTIONS is the best possible match, so just
 			// stop parsing other sections
 			break

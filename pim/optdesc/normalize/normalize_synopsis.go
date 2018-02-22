@@ -1,4 +1,4 @@
-package parse
+package normalize
 
 import (
 	"regexp"
@@ -52,7 +52,7 @@ func normalizeOptSynopsis(synopsis string) string {
 
 }
 
-func normalizeOptSynopsises(expressions []string) []string {
+func NormalizeOptSynopsises(expressions []string) []string {
 	normalizedExpressions := make([]string, len(expressions))
 	for i := range expressions {
 		normalizedExpressions[i] = normalizeOptSynopsis(expressions[i])

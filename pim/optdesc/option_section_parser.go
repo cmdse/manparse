@@ -1,9 +1,10 @@
-package parse
+package optdesc
 
 import (
 	"regexp"
 
 	"github.com/cmdse/manparse/docbook/section"
+	"github.com/cmdse/manparse/pim/optdesc/extractor"
 )
 
 var regexIsSection = regexp.MustCompile(`^refsect[123]|refsection$`)
@@ -60,20 +61,17 @@ func filterVarLists(children section.Nodes) section.Nodes {
 	return varLists
 }
 
-func varListToExtracts(varList *section.Node) rawOptExtracts {
+func varListToExtracts(varList *section.Node) extractor.RawOptExtracts {
 	entries := varList.Children
-	rawOptExtracts := make(rawOptExtracts, 0, 15)
+	rawOptExtracts := make(extractor.RawOptExtracts, 0, 15)
 	for _, entry := range entries {
-		extract := &rawOptExtract{
-			optSynopsis:    entry.Children[0],
-			optDescription: entry.Children[1],
-		}
+		extract := extractor.NewRawOptExtract(entry.Children[0], entry.Children[1])
 		rawOptExtracts = append(rawOptExtracts, extract)
 	}
 	return rawOptExtracts
 }
 
-func aggregateRelevantNode(children section.Nodes) rawOptExtracts {
+func aggregateRelevantNode(children section.Nodes) extractor.RawOptExtracts {
 	varLists := filterVarLists(children)
 	switch len(varLists) {
 	case 0:
@@ -103,18 +101,15 @@ func matchSiblingPattern(current *section.Node, next *section.Node) bool {
 		(next.Type == "literallayout" || next.Type == "programlisting" || next.Type == "blockquote")
 }
 
-func aggregateSiblingsToExtract(nodes section.Nodes) rawOptExtracts {
-	rawOptExtracts := make(rawOptExtracts, 0, 15)
+func aggregateSiblingsToExtract(nodes section.Nodes) extractor.RawOptExtracts {
+	rawOptExtracts := make(extractor.RawOptExtracts, 0, 15)
 	var skip = new(int)
 	*skip = 1
 	for index := 0; index < len(nodes); index = index + *skip {
 		node := nodes[index]
 		sibling := nodes[index+1]
 		if matchSiblingPattern(node, sibling) {
-			extract := &rawOptExtract{
-				optSynopsis:    node,
-				optDescription: sibling,
-			}
+			extract := extractor.NewRawOptExtract(node, sibling)
 			rawOptExtracts = append(rawOptExtracts, extract)
 			*skip = 2
 			break
@@ -126,7 +121,7 @@ func aggregateSiblingsToExtract(nodes section.Nodes) rawOptExtracts {
 
 var OptionSectionParser = SectionParser{
 	TargetSection: "OPTION",
-	aggregateExtracts: func(parser *SectionParser, section *section.Section) rawOptExtracts {
+	aggregateExtracts: func(parser *SectionParser, section *section.Section) extractor.RawOptExtracts {
 		// flatten sections, if any sub-sections
 		flattenChildren := bubbleNodes(section.Children, isSection)
 		return aggregateRelevantNode(flattenChildren)

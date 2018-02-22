@@ -1,4 +1,4 @@
-package parse
+package extractor
 
 import (
 	"github.com/cmdse/core/schema"
@@ -8,7 +8,7 @@ import (
 )
 
 var _ = Describe("matchModelsFromSynopsisString method", func() {
-	DescribeTable("expected output",
+	DescribeTable("expected outputted MatchModels",
 		func(synopsis string, expectedMatchModels ...*schema.MatchModel) {
 			matchModels, err := matchModelsFromSynopsisString(synopsis)
 			Expect(err).ToNot(HaveOccurred())

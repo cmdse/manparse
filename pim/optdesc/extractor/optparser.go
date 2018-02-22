@@ -1,4 +1,4 @@
-package parse
+package extractor
 
 import (
 	"github.com/cmdse/core/argparse"
