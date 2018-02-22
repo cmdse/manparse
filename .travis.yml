@@ -1,0 +1,35 @@
+language: go
+
+# The coverprofile for multiple packages works in go 1.10
+# see https://tip.golang.org/doc/go1.10#test
+go:
+  - master
+
+env:
+  - DEP_VERSION="0.4.1" CC_TEST_REPORTER="0.4.2"
+
+before_install:
+  - go get -u gopkg.in/alecthomas/gometalinter.v2
+  - curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 -o $GOPATH/bin/dep
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-${CC_TEST_REPORTER}-linux-amd64 > ./cc-test-reporter
+  # Make the binary executable
+  - chmod +x $GOPATH/bin/dep
+  - chmod +x ./cc-test-reporter
+
+install:
+  - dep ensure
+  - gometalinter.v2 --install
+
+before_script:
+  - ./cc-test-reporter before-build
+
+script:
+  - go test -coverprofile c.out ./...
+  - gometalinter.v2
+
+after_success:
+  # Post goreportcard refresh
+  - >
+    curl -X POST https://goreportcard.com/checks -H 'content-type: multipart/form-data' -F repo=github.com/cmdse/manparse
+  # Launch code climate test coverage reporter
+  - ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT
