@@ -47,10 +47,10 @@ var _ = Describe("matchModelsFromSynopsisString method", func() {
 			schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "config-file", "file"),
 		),
 		// SPECIAL CASES
-		XEntry("should handle an optional option value assignment to the combination of flag + assignment",
+		Entry("should handle an optional option value assignment to the combination of flag + assignment",
 			"--context[=CTX]",
-			schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "context", "ctx"),
 			schema.NewStandaloneMatchModel(schema.VariantGNUSwitch, "context"),
+			schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "context", "CTX"),
 		),
 		XEntry("should handle a GNU silent assignment + POSIX explicit option assignment such as in 'mv' man page",
 			"-t, --target-directory=DIRECTORY'",

@@ -49,3 +49,25 @@ It's likely that the intended POSIX switch is an assignment with the second opti
 -t DIRECTORY, --target-directory=DIRECTORY
       move all SOURCE arguments into DIRECTORY
 ```
+
+### C. In an OPTIONS section, an option synopsis holds an optional explicit assignment
+
+> `manparse` should split the option synopsis in two, with one flag and one option assignment.
+> The description fields should be reviewed by user.
+
+
+#### Example (invented)
+
+**this**
+```
+--context[=CTX]
+      provide CTX, default to ...
+```
+
+**should be interpreted as**
+```
+--context
+      provide default context ...
+--context=CTX
+      provide context ...
+```
