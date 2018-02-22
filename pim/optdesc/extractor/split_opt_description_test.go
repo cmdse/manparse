@@ -1,4 +1,4 @@
-package normalize
+package extractor
 
 import (
 	. "github.com/onsi/ginkgo/extensions/table"
@@ -13,8 +13,8 @@ func copyStringToInterface(strs []string) []interface{} {
 	return interfaces
 }
 
-var _ = FDescribeTable("normalizeFlag function", func(synopsis string, expectedMatched bool, expectedOutput []string) {
-	expression, concreteMatched := normalizeFlag(synopsis)
+var _ = DescribeTable("splitOptExpression function", func(synopsis string, expectedMatched bool, expectedOutput []string) {
+	expression, concreteMatched := splitOptExpression(synopsis)
 	Expect(concreteMatched).To(Equal(expectedMatched), "didn't match expected bool return")
 	Expect(expression).To(ConsistOf(copyStringToInterface(expectedOutput)...), "didn't match expected expression array")
 },

@@ -15,7 +15,7 @@ func dismissOperandAndStackedCandidates(tokens schema.TokenList) {
 	}
 }
 
-// OptSynopsisBehavior is a behavior specifically designed for option synopsis parsing.
+// OptSynopsisBehavior is a behavior specifically designed for option optionSynopsis parsing.
 var OptSynopsisBehavior = &argparse.Behavior{
 	RunInferences: func(p *argparse.Parser, token *schema.Token) {
 		token.InferRight()

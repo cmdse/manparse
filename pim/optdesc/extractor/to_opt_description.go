@@ -10,7 +10,7 @@ import (
 var whitespacesRegex = regexp.MustCompile(`\s+`)
 
 func (extractor *Extractor) tokensToMatchModel(optParts schema.TokenList) *schema.MatchModel {
-	extractor.SetContext("THIS IS CONTEXT BUDDY") // TODO handle context better
+	extractor.SetContext("tokensToMatchModel") // TODO handle context better
 	var semanticTypes = make([]*schema.SemanticTokenType, len(optParts))
 	for i, token := range optParts {
 		switch ttype := token.Ttype.(type) {
@@ -31,7 +31,7 @@ func (extractor *Extractor) tokensToMatchModel(optParts schema.TokenList) *schem
 		definition := optExpression.Options()[0]
 		return schema.NewMatchModelFromDefinition(definition)
 	default:
-		extractor.Errorf("failure to extract MatchModel: synopsis has %v option parts instead of 1 or 2 expected", len(optParts))
+		extractor.Errorf("failure to extract MatchModel: optionSynopsis has %v option parts instead of 1 or 2 expected", len(optParts))
 		return nil
 	}
 }
@@ -55,16 +55,16 @@ func (extractor *Extractor) checkModelsAreAssignments(synopsis schema.MatchModel
 				synopsis[i] = matchModel
 				break
 			} else {
-				extractor.Errorf("didn't expect match model extraction to fail for synopsis : %v", args)
+				extractor.Errorf("didn't expect match model extraction to fail for optionSynopsis : %v", args)
 			}
 		}
 	}
 	return synopsis
 }
 
-func (extractor *Extractor) matchModelsFromSynopsisString(synopsis string) schema.MatchModels {
+func (extractor *Extractor) matchModelsFromSynopsis(synopsis *optionSynopsis) schema.MatchModels {
 	models := make(schema.MatchModels, 0, 2)
-	expressions := normalize.NormalizeOptSynopsises(splitSynopsis(synopsis))
+	expressions := normalize.NormalizeOptDescriptions(synopsis.expressions)
 	argsList := make([][]string, len(expressions))
 	for i, expr := range expressions {
 		args := whitespacesRegex.Split(expr, -1)

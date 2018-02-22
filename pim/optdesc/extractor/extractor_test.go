@@ -8,11 +8,14 @@ import (
 )
 
 var _ = Describe("Extractor struct", func() {
-	Describe("matchModelsFromSynopsisString method", func() {
+	Describe("matchModelsFromSynopsis method", func() {
 		DescribeTable("expected outputted MatchModels",
 			func(synopsis string, expectedMatchModels ...*schema.MatchModel) {
 				extractor := NewExtractor(nil)
-				matchModels := extractor.matchModelsFromSynopsisString(synopsis)
+				matchModels := extractor.matchModelsFromSynopsis(&optionSynopsis{
+					splitSynopsis(synopsis),
+					"",
+				})
 				Expect(extractor.Reports).To(HaveLen(0))
 				Expect(matchModels).To(HaveLen(len(expectedMatchModels)))
 				for i, model := range matchModels {
@@ -50,12 +53,7 @@ var _ = Describe("Extractor struct", func() {
 				schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "config-file", "file"),
 			),
 			// SPECIAL CASES
-			Entry("should handle an optional option value assignment to the combination of flag + assignment",
-				"--context[=CTX]",
-				schema.NewStandaloneMatchModel(schema.VariantGNUSwitch, "context"),
-				schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "context", "CTX"),
-			),
-			PEntry("should handle a GNU silent assignment + POSIX explicit option assignment such as in 'mv' man page",
+			Entry("should handle a GNU silent assignment + POSIX explicit option assignment such as in 'mv' man page",
 				"-t, --target-directory=DIRECTORY",
 				schema.NewAssignmentMatchModel(schema.VariantPOSIXShortAssignment, "t", "DIRECTORY"),
 				schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "target-directory", "DIRECTORY"),
@@ -67,5 +65,12 @@ var _ = Describe("Extractor struct", func() {
 			),
 		)
 	})
-
+	Describe("ParseExtracts method", func() {
+		// TODO implement tests
+		//Entry("should handle an optional option value assignment to the combination of flag + assignment",
+		//"--context[=CTX]",
+		//schema.NewStandaloneMatchModel(schema.VariantGNUSwitch, "context"),
+		//schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "context", "CTX"),
+		//),
+	})
 })

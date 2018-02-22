@@ -22,7 +22,7 @@ var _ = Describe("normalization functions", func() {
 		Entry("should handle multiple spaces", "-foo  bar", "  "),
 	)
 	DescribeTable("normalizeOptSynopsis function", func(synopsis string, expectedNormalized string) {
-		Expect(normalizeOptSynopsis(synopsis)).To(Equal([]string{expectedNormalized}))
+		Expect(normalizeOptSynopsis(synopsis)).To(Equal(expectedNormalized))
 	},
 		Entry("should normalize single-quoted expressions", "-ldflags 'flag list'", "-ldflags flag-list"),
 		Entry("should normalize double-quoted expressions", "-ldflags \"flag list\"", "-ldflags flag-list"),
