@@ -7,7 +7,7 @@
     "argparse",
     "schema"
   ]
-  revision = "af899ac569992e3fb444708ea43c34c8601f70aa"
+  revision = "412a3d9c5acb3070ade70a75b3ff20c3a36dfa17"
 
 [[projects]]
   name = "github.com/davecgh/go-spew"
@@ -114,6 +114,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cf494bacf351755eb57715ef683831bb924d98ca4ed0f5b3b1f0b80e64ab1120"
+  inputs-digest = "23306dfe6f7c76e63c2e092bd76d8fcaa9257b2e6e3c4210bff4b44ec994d08a"
   solver-name = "gps-cdcl"
   solver-version = 1
