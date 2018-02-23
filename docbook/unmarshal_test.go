@@ -34,6 +34,20 @@ var _ = Describe("Unmarshal function", func() {
 			Expect(mandoc.Sections[0].Title).To(Equal("DESCRIPTION"))
 		})
 	})
+	Context("[Regression test] should not reproduce bug with a specific section", func() {
+		mandoc, err := Unmarshal("./test/doclifter-translation-rules.1.xml")
+		It("should not throw", func() {
+			Expect(err).NotTo(HaveOccurred())
+		})
+		It("should return a non nil struct pointer", func() {
+			Expect(mandoc).NotTo(BeNil())
+		})
+		It("should handle sections properly", func() {
+			Expect(len(mandoc.Sections)).To(Equal(1), "sould be of length 1")
+			Expect(mandoc.Sections).To(HaveLen(1))
+			Expect(mandoc.Sections[0].Title).To(Equal("TRANSLATION RULES"))
+		})
+	})
 	PWhen("run on full file", func() {
 		mandoc, err := Unmarshal("./test/doclifter.1.xml")
 		It("should not throw", func() {
@@ -43,8 +57,8 @@ var _ = Describe("Unmarshal function", func() {
 			Expect(mandoc).NotTo(BeNil())
 		})
 		It("should handle sections properly", func() {
-			Expect(len(mandoc.Sections)).To(Equal(2), "sould be of length 2")
-			Expect(mandoc.Sections).To(HaveLen(2))
+			Expect(len(mandoc.Sections)).To(Equal(13), "sould be of length 2")
+			Expect(mandoc.Sections).To(HaveLen(13))
 			Expect(mandoc.Sections[0].Title).To(Equal("DESCRIPTION"))
 			Expect(mandoc.Sections[1].Title).To(Equal("OPTIONS"))
 		})
