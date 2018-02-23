@@ -12,4 +12,4 @@
 
 See documentation in [cmdse.github.io](https://cmdse.github.io/pages/manparse.html).
 
-Also, visit [edge cases list reference](/EDGE_CASES.MD) to see how `manparse` handle ambiguous scenario.
+Also, visit [the guesses list reference](/GUESSES.MD) to see how `manparse` handle ambiguous scenario.

@@ -1,10 +1,16 @@
-# A list of spotted edge-cases that require special handling
+# A list of spotted guesses that require special handling
 
 When such a case occurs, it is considered ambiguous and `manparse` should always prompt the user for a confirmation.
 
-### A. In an OPTIONS section, an option synopsis has more than two coma separated values
+## Options synopsis parsing
 
-Context is a sub-command and a reference to an other sub-command appears in description.
+Option synopsis are found in the OPTIONS section of a manpage.
+
+### REMOTE_OPT_SYNOPSIS
+
+**An option synopsis has more than two coma separated values and a reference to a sub-command appears in the description.**
+
+It is likely that the option descriptions should be replaced after extraction of the sub-command PIM.
 
 > `manparse` should be able to fetch the corresponding options in the sibling sub-command model.
 
@@ -16,7 +22,7 @@ Context is a sub-command and a reference to an other sub-command appears in desc
       and 'go install'.  See go-build(1).
 ```
 
-**should be interpreted as**
+**should be interpreted as** (from go-build(1))
 ``` xml
 -a
       force rebuilding of packages that are already up-to-date.
@@ -30,7 +36,9 @@ Context is a sub-command and a reference to an other sub-command appears in desc
       the number of builds that can be run in parallel. The default is the number of CPUs available.
 ```
 
-### B. In an OPTIONS section, an option synopsis has two option descriptions with only one having a value assignment and the other being a short POSIX switch
+### SUGGESTED_POSIX_IMPLICIT_ASSIGNMENT
+
+**An option synopsis has two option descriptions with the latest having a value assignment and the foremost being a short POSIX switch**
 
 It's likely that the intended POSIX switch is an assignment with the second option description assignment value.
 
@@ -50,7 +58,9 @@ It's likely that the intended POSIX switch is an assignment with the second opti
       move all SOURCE arguments into DIRECTORY
 ```
 
-### C. In an OPTIONS section, an option synopsis holds an optional explicit assignment
+### OPTIONAL_EXPLICIT_ASSIGNMENT
+
+**An option synopsis holds an optional explicit assignment**
 
 > `manparse` should split the option synopsis in two, with one flag and one option assignment.
 > The description fields should be reviewed by user.
@@ -69,5 +79,29 @@ It's likely that the intended POSIX switch is an assignment with the second opti
 --context
       provide default context ...
 --context=CTX
+      provide context ...
+```
+
+### OPTIONAL_IMPLICIT_ASSIGNMENT
+
+**An option synopsis holds an optional implicit assignment**
+
+> `manparse` should split the option synopsis in two, with one flag and one option assignment.
+> The description fields should be reviewed by user.
+
+
+#### Example (invented)
+
+**this**
+```
+--context [CTX]
+      provide CTX, default to ...
+```
+
+**should be interpreted as**
+```
+--context
+      provide default context ...
+--context CTX
       provide context ...
 ```
