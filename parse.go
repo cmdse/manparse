@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/cmdse/manparse/pim"
+
 	"github.com/cmdse/manparse/docbook"
 )
 
@@ -29,10 +31,6 @@ func main() {
 	mandoc, err = docbook.Unmarshal(file)
 	checkUnmarshalErr(err, file)
 	fmt.Printf("COMMAND: %#v\n", mandoc.CmdSynopsis.Command)
-	//fmt.Printf("TOKENS: %v\n", mandoc.CmdSynopsis.Tokens)
-	for _, sec := range mandoc.Sections {
-		if sec.Title == "OPTIONS" || sec.Title == "DESCRIPTION" {
-			fmt.Printf("%v\n", sec)
-		}
-	}
+	pim := pim.ExtractPIMFromDocBook(mandoc, os.Stdout)
+	fmt.Printf("DESCRIPTION MODEL: %v\n", pim.DescriptionModel())
 }

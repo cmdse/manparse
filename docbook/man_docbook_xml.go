@@ -10,5 +10,5 @@ type ManDocBookXml struct {
 	Name        string               `xml:"refnamediv>refname"`
 	Purpose     string               `xml:"refnamediv>refpurpose"`
 	CmdSynopsis synopsis.CmdSynopsis `xml:"refsynopsisdiv>cmdsynopsis"`
-	Sections    []section.Section    `xml:"refsect1"`
+	Sections    []*section.Section   `xml:"refsect1"`
 }

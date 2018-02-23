@@ -13,10 +13,11 @@ var _ = Describe("Extractor struct", func() {
 			func(synopsis string, expectedMatchModels ...*schema.MatchModel) {
 				extractor := NewExtractor(nil)
 				matchModels := extractor.matchModelsFromSynopsis(&optionSynopsis{
+					synopsis,
 					splitSynopsis(synopsis),
 					"",
 				})
-				Expect(extractor.Reports).To(HaveLen(0))
+				Expect(extractor.Failures).To(HaveLen(0))
 				Expect(matchModels).To(HaveLen(len(expectedMatchModels)))
 				for i, model := range matchModels {
 					expected := expectedMatchModels[i]

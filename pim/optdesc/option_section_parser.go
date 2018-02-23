@@ -107,12 +107,15 @@ func aggregateSiblingsToExtract(nodes section.Nodes) extractor.RawOptExtracts {
 	*skip = 1
 	for index := 0; index < len(nodes); index = index + *skip {
 		node := nodes[index]
-		sibling := nodes[index+1]
-		if matchSiblingPattern(node, sibling) {
-			extract := extractor.NewRawOptExtract(node, sibling)
-			rawOptExtracts = append(rawOptExtracts, extract)
-			*skip = 2
-			break
+		// TODO test
+		if index+1 < len(nodes) {
+			sibling := nodes[index+1]
+			if matchSiblingPattern(node, sibling) {
+				extract := extractor.NewRawOptExtract(node, sibling)
+				rawOptExtracts = append(rawOptExtracts, extract)
+				*skip = 2
+				break
+			}
 		}
 	}
 	*skip = 1

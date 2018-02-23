@@ -16,6 +16,18 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/emirpasic/gods"
+  packages = [
+    "containers",
+    "lists",
+    "lists/arraylist",
+    "stacks",
+    "stacks/arraystack",
+    "utils"
+  ]
+  revision = "b2394dfbb6314eeb616db55d1e01928f287da4b4"
+
+[[projects]]
   name = "github.com/onsi/ginkgo"
   packages = [
     ".",
@@ -114,6 +126,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "23306dfe6f7c76e63c2e092bd76d8fcaa9257b2e6e3c4210bff4b44ec994d08a"
+  inputs-digest = "198068f5422f6bdc64fdd88688d9923847bae6326ecb923bd0d23125ee09f493"
   solver-name = "gps-cdcl"
   solver-version = 1
