@@ -69,7 +69,7 @@ func (extractor *Extractor) convertExtractsToOptDescription() {
 		optDescription := extractor.extractToOptDescription(synopsis)
 		if optDescription != nil {
 			extractor.descriptionModel = append(extractor.descriptionModel, optDescription)
-			variantNames := formatVariantNames(extractor.descriptionModel.Variants())
+			variantNames := formatVariantNames(optDescription.Variants())
 			extractor.ReportSuccessf("extracted with option expression variant(s) : '%v'", variantNames)
 		}
 		extractor.RedeemContext()

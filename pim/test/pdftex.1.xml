@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!-- lifted from man+troff by doclifter -->
+<refentry>
+  <refentryinfo><date>4 May 2016</date></refentryinfo>
+  <refmeta>
+    <refentrytitle>PDFTEX</refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo class='date'>4 May 2016</refmiscinfo>
+    <refmiscinfo class='source'>Web2C 2018/dev</refmiscinfo>
+  </refmeta>
+  <refnamediv>
+    <refname>pdftex</refname>
+    <refpurpose>PDF output from TeX</refpurpose>
+  </refnamediv>
+  <!-- body begins here -->
+  <refsynopsisdiv id='synopsis'>
+    <cmdsynopsis>
+      <command>pdftex</command>
+      <arg choice='opt'><replaceable>options</replaceable></arg>
+      <arg choice='opt'><replaceable>&amp;format</replaceable></arg>
+      <group choice='opt'><arg choice='plain'><replaceable>file</replaceable></arg><arg choice='plain'><replaceable>&bsol;commands</replaceable></arg></group>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+
+  <refsect1 id='description'><title>DESCRIPTION</title>
+    <para>Run the pdfTeX typesetter on
+      <emphasis remap='I'>file</emphasis>,
+      usually creating
+      <emphasis remap='I'>file.pdf</emphasis>.
+      If the file argument has no extension, ".tex" will be appended to it.
+      Instead of a filename, a set of pdfTeX commands can be given, the first
+      of which must start with a backslash.
+      With a
+      <emphasis role='strong' remap='B'>&amp;</emphasis><emphasis remap='I'>format</emphasis>
+      argument pdfTeX uses a different set of precompiled commands,
+      contained in
+      <emphasis remap='I'>format</emphasis><emphasis role='strong' remap='B'>.fmt</emphasis>;
+      it is usually better to use the
+      <emphasis role='strong' remap='B'>-fmt</emphasis>
+      <emphasis remap='I'>format</emphasis>
+      option instead.</para>
+
+    <para>pdfTeX is a version of TeX, with the e-TeX extensions, that can create
+      <emphasis remap='I'>PDF</emphasis>
+      files as well as
+      <emphasis remap='I'>DVI</emphasis>
+      files.</para>
+
+    <para>In
+      <emphasis remap='I'>DVI</emphasis>
+      mode, pdfTeX can be used as a complete replacement for the TeX
+      engine.</para>
+
+    <para>The typical use of pdfTeX is with a pregenerated formats for which
+      PDF output has been enabled.  The
+      <emphasis role='strong' remap='B'>pdftex</emphasis>
+      command uses the equivalent of the plain TeX format, and the
+      <emphasis role='strong' remap='B'>pdflatex</emphasis>
+      command uses the equivalent of the LaTeX format.
+      To generate formats, use the
+      <emphasis role='strong' remap='B'>-ini</emphasis>
+      switch.</para>
+
+    <para>The
+      <emphasis role='strong' remap='B'>pdfinitex</emphasis>
+      and
+      <emphasis role='strong' remap='B'>pdfvirtex</emphasis>
+      commands are pdfTeX's analogues to the
+      <emphasis role='strong' remap='B'>initex</emphasis>
+      and
+      <emphasis role='strong' remap='B'>virtex</emphasis>
+      commands.  In this installation, if the links exist, they are symbolic
+      links to the
+      <emphasis role='strong' remap='B'>pdftex</emphasis>
+      executable.</para>
+
+    <para>In
+      <emphasis remap='I'>PDF</emphasis>
+      mode, pdfTeX can natively handle the
+      <emphasis remap='I'>PDF</emphasis>,
+      <emphasis remap='I'>JPG</emphasis>,
+      <emphasis remap='I'>JBIG2</emphasis>,
+      and
+      <emphasis remap='I'>PNG</emphasis>
+      graphics formats.  pdfTeX cannot include PostScript or Encapsulated
+      PostScript (EPS) graphics files; first convert them to PDF using
+      <citerefentry><refentrytitle>epstopdf</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+      pdfTeX's handling of its command-line arguments is similar to that of
+      of the other TeX programs in the
+      <emphasis remap='I'>web2c</emphasis>
+      implementation.</para>
+    <!-- ===================================================================== -->
+  </refsect1>
+
+  <refsect1 id='options'><title>OPTIONS</title>
+    <para>This version of pdfTeX understands the following command line options.</para>
+    <variablelist remap='TP'>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-draftmode</emphasis></term>
+        <listitem>
+          <para>Sets &bsol;pdfdraftmode so pdfTeX doesn't write a PDF and doesn't read any
+            included images, thus speeding up execution.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-enc</emphasis></term>
+        <listitem>
+          <para>Enable the encTeX extensions.  This option is only effective in
+            combination with
+            <emphasis role='strong' remap='B'>-ini</emphasis>.
+            For documentation of the encTeX extensions see
+            <emphasis role='strong' remap='B'><ulink url='http://www.olsak.net/enctex.html'>http://www.olsak.net/enctex.html</ulink></emphasis>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-etex</emphasis></term>
+        <listitem>
+          <para>Enable the e-TeX extensions.  This option is only effective in
+            combination with
+            <emphasis role='strong' remap='B'>-ini</emphasis>.
+            See
+            <citerefentry><refentrytitle>etex</refentrytitle><manvolnum>1</manvolnum></citerefentry>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-file-line-error</emphasis></term>
+        <listitem>
+          <para>Print error messages in the form
+            <emphasis remap='I'>file:line:error</emphasis>
+            which is similar to the way many compilers format them.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-no-file-line-error</emphasis></term>
+        <listitem>
+          <para>Disable printing error messages in the
+            <emphasis remap='I'>file:line:error</emphasis>
+            style.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-file-line-error-style</emphasis></term>
+        <listitem>
+          <para>This is the old name of the
+            <emphasis role='strong' remap='B'>-file-line-error</emphasis>
+            option.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-fmt</emphasis><emphasis remap='I'> format</emphasis></term>
+        <listitem>
+          <para>Use
+            <emphasis remap='I'>format</emphasis>
+            as the name of the format to be used, instead of the name by which
+            pdfTeX was called or a
+            <emphasis remap='I'>%&amp;</emphasis>
+            line.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-halt-on-error</emphasis></term>
+        <listitem>
+          <para>Exit with an error code when an error is encountered during processing.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-help</emphasis></term>
+        <listitem>
+          <para>Print help message and exit.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-ini</emphasis></term>
+        <listitem>
+          <para>Start in
+            <emphasis remap='I'>INI</emphasis>
+            mode, which is used to dump formats.  The
+            <emphasis remap='I'>INI</emphasis>
+            mode can be used for typesetting, but no format is preloaded, and
+            basic initializations like setting catcodes may be required.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-interaction</emphasis><emphasis remap='I'> mode</emphasis></term>
+        <listitem>
+          <para>Sets the interaction mode.  The mode can be either
+            <emphasis remap='I'>batchmode</emphasis>,
+            <emphasis remap='I'>nonstopmode</emphasis>,
+            <emphasis remap='I'>scrollmode</emphasis>,
+            and
+            <emphasis remap='I'>errorstopmode</emphasis>.
+            The meaning of these modes is the same as that of the corresponding
+            &bsol;commands.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-ipc</emphasis></term>
+        <listitem>
+          <para>Send DVI or PDF output to a socket as well as the usual output file.
+            Whether this option is available is the choice of the installer.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-ipc-start</emphasis></term>
+        <listitem>
+          <para>As
+            <emphasis role='strong' remap='B'>-ipc</emphasis>,
+            and starts the server at the other end as well.  Whether this option
+            is available is the choice of the installer.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-jobname</emphasis><emphasis remap='I'> name</emphasis></term>
+        <listitem>
+          <para>Use
+            <emphasis remap='I'>name</emphasis>
+            for the job name, instead of deriving it from the name of the input file.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-kpathsea-debug</emphasis><emphasis remap='I'> bitmask</emphasis></term>
+        <listitem>
+          <para>Sets path searching debugging flags according to the bitmask.  See the
+            <emphasis remap='I'>Kpathsea</emphasis>
+            manual for details.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-mktex</emphasis><emphasis remap='I'> fmt</emphasis></term>
+        <listitem>
+          <para>Enable
+            mktex<emphasis remap='I'>fmt</emphasis>,
+            where
+            <emphasis remap='I'>fmt</emphasis>
+            must be either
+            <emphasis remap='I'>tex</emphasis>
+            or
+            <emphasis remap='I'>tfm</emphasis>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-mltex</emphasis></term>
+        <listitem>
+          <para>Enable MLTeX extensions.  Only effective in combination with
+            <emphasis role='strong' remap='B'>-ini</emphasis>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-no-mktex</emphasis><emphasis remap='I'> fmt</emphasis></term>
+        <listitem>
+          <para>Disable
+            mktex<emphasis remap='I'>fmt</emphasis>,
+            where
+            <emphasis remap='I'>fmt</emphasis>
+            must be either
+            <emphasis remap='I'>tex</emphasis>
+            or
+            <emphasis remap='I'>tfm</emphasis>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-output-comment</emphasis><emphasis remap='I'> string</emphasis></term>
+        <listitem>
+          <para>In
+            <emphasis remap='I'>DVI</emphasis>
+            mode, use
+            <emphasis remap='I'>string</emphasis>
+            for the
+            <emphasis remap='I'>DVI</emphasis>
+            file comment instead of the date.  This option is ignored
+            in
+            <emphasis remap='I'>PDF</emphasis>
+            mode.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-output-directory</emphasis><emphasis remap='I'> directory</emphasis></term>
+        <listitem>
+          <para>Write output files in
+            <emphasis remap='I'>directory</emphasis>
+            instead of the current directory.  Look up input files in
+            <emphasis remap='I'>directory</emphasis>
+            first, the along the normal search path.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-output-format</emphasis><emphasis remap='I'> format</emphasis></term>
+        <listitem>
+          <para>Set the output format mode, where
+            <emphasis remap='I'>format</emphasis>
+            must be either
+            <emphasis remap='I'>pdf</emphasis>
+            or
+            <emphasis remap='I'>dvi</emphasis>.
+            This also influences the set of graphics formats understood by pdfTeX.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-parse-first-line</emphasis></term>
+        <listitem>
+          <para>If the first line of the main input file begins with
+            <emphasis remap='I'>%&amp;</emphasis>
+            parse it to look for a dump name or a
+            <emphasis role='strong' remap='B'>-translate-file</emphasis>
+            option.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-no-parse-first-line</emphasis></term>
+        <listitem>
+          <para>Disable parsing of the first line of the main input file.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-progname</emphasis><emphasis remap='I'> name</emphasis></term>
+        <listitem>
+          <para>Pretend to be program
+            <emphasis remap='I'>name</emphasis>.
+            This affects both the format used and the search paths.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-recorder</emphasis></term>
+        <listitem>
+          <para>Enable the filename recorder.
+            This leaves a trace of the files opened for input and output
+            in a file with extension
+            <markup>.fls</markup>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-shell-escape</emphasis></term>
+        <listitem>
+          <para>Enable the
+            <emphasis role='strong' remap='B'>&bsol;write18{</emphasis><emphasis remap='I'>command</emphasis><emphasis role='strong' remap='B'>}</emphasis>
+            construct.  The
+            <emphasis remap='I'>command</emphasis>
+            can be any shell command.  This construct is normally
+            disallowed for security reasons.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-no-shell-escape</emphasis></term>
+        <listitem>
+          <para>Disable the
+            <emphasis role='strong' remap='B'>&bsol;write18{</emphasis><emphasis remap='I'>command</emphasis><emphasis role='strong' remap='B'>}</emphasis>
+            construct, even if it is enabled in the
+            <emphasis remap='I'>texmf.cnf</emphasis>
+            file.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-src-specials</emphasis></term>
+        <listitem>
+          <para>In
+            <emphasis remap='I'>DVI</emphasis>
+            mode, insert source specials into the
+            <emphasis remap='I'>DVI</emphasis>
+            file.
+            This option is ignored in
+            <emphasis remap='I'>PDF</emphasis>
+            mode.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-src-specials</emphasis><emphasis remap='I'> where</emphasis></term>
+        <listitem>
+          <para>In
+            <emphasis remap='I'>DVI</emphasis>
+            mode, insert source specials in certain placed of the
+            <emphasis remap='I'>DVI</emphasis>
+            file.
+            <emphasis remap='I'>where</emphasis>
+            is a comma-separated value list:
+            <emphasis remap='I'>cr</emphasis>,
+            <emphasis remap='I'>display</emphasis>,
+            <emphasis remap='I'>hbox</emphasis>,
+            <emphasis remap='I'>math</emphasis>,
+            <emphasis remap='I'>par</emphasis>,
+            <emphasis remap='I'>parent</emphasis>,
+            or
+            <emphasis remap='I'>vbox</emphasis>.
+            This option is ignored in
+            <emphasis remap='I'>PDF</emphasis>
+            mode.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-translate-file</emphasis><emphasis remap='I'> tcxname</emphasis></term>
+        <listitem>
+          <para>Use the
+            <emphasis remap='I'>tcxname</emphasis>
+            translation table to set the mapping of input characters and
+            re-mapping of output characters.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-default-translate-file</emphasis><emphasis remap='I'> tcxname</emphasis></term>
+        <listitem>
+          <para>Like
+            <emphasis role='strong' remap='B'>-translate-file</emphasis>
+            except that a
+            <emphasis remap='I'>%&amp;</emphasis>
+            line can overrule this setting.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-version</emphasis></term>
+        <listitem>
+          <para>Print version information and exit.</para>
+          <!-- ===================================================================== -->
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id='environment'><title>ENVIRONMENT</title>
+    <para>See the Kpathsea library documentation (e.g., the `Path specifications'
+      node) for precise details of how the environment variables are used.
+      The
+      <emphasis role='strong' remap='B'>kpsewhich</emphasis>
+      utility can be used to query the values of the variables.</para>
+
+    <para>One caveat: In most pdfTeX formats, you cannot use ~ in a filename you
+      give directly to pdfTeX, because ~ is an active character, and hence is
+      expanded, not taken as part of the filename.  Other programs, such as
+      Metafont, do not have this problem.</para>
+
+    <variablelist remap='TP'>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>TEXMFOUTPUT</emphasis></term>
+        <listitem>
+          <para>Normally, pdfTeX puts its output files in the current directory.  If
+            any output file cannot be opened there, it tries to open it in the
+            directory specified in the environment variable TEXMFOUTPUT.
+            There is no default value for that variable.  For example, if you say
+            <emphasis remap='I'>pdftex paper</emphasis>
+            and the current directory is not writable and TEXMFOUTPUT has
+            the value
+            <filename>/tmp</filename>,
+            pdfTeX attempts to create
+            <filename>/tmp/paper.log</filename>
+            (and
+            <filename>/tmp/paper.pdf</filename>,
+            if any output is produced.)  TEXMFOUTPUT is also checked for input
+            files, as TeX often generates files that need to be subsequently
+            read; for input, no suffixes (such as &ldquo;.tex&rdquo;) are added by default,
+            the input name is simply checked as given.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>TEXINPUTS</emphasis></term>
+        <listitem>
+          <para>Search path for
+            <emphasis remap='I'>&bsol;input</emphasis>
+            and
+            <emphasis remap='I'>&bsol;openin</emphasis>
+            files.
+            This should start with &ldquo;.&rdquo;, so
+            that user files are found before system files.  An empty path
+            component will be replaced with the paths defined in the
+            <emphasis remap='I'>texmf.cnf</emphasis>
+            file.  For example, set TEXINPUTS to ".:/home/user/tex:" to prepend the
+            current directory and &ldquo;/home/user/tex&rdquo; to the standard search path.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>TEXFORMATS</emphasis></term>
+        <listitem>
+          <para>Search path for format files.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>TEXEDIT</emphasis></term>
+        <listitem>
+          <para>Command template for switching to editor.  The default, usually
+            <emphasis role='strong' remap='B'>vi</emphasis>,
+            is set when pdfTeX is compiled.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>TFMFONTS</emphasis></term>
+        <listitem>
+          <para>Search path for font metric
+            (<markup>.tfm</markup>)
+            files.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>SOURCE_DATE_EPOCH</emphasis></term>
+        <listitem>
+          <para>If set, its value, taken to be in epoch-seconds, will be used for the
+            timestamps in the PDF output, such as the CreationDate and ModDate keys.
+            This is useful for making reproducible builds.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>FORCE_SOURCE_DATE</emphasis></term>
+        <listitem>
+          <para>If set to the value "1", the time-related TeX primitives
+            (<emphasis remap='I'>&bsol;year</emphasis>,
+            <emphasis remap='I'>&bsol;month</emphasis>,
+            <emphasis remap='I'>&bsol;day</emphasis>,
+            <emphasis remap='I'>&bsol;time</emphasis>)
+            are also initialized from the value of SOURCE_DATE_EPOCH.  This is not
+            recommended if there is any viable alternative.
+            <!-- br -->
+            pdfTeX also has several primitives to support reproducible builds,
+            which are preferable to setting these environment variables; see the
+            main manual.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Many, many more environment variables may be consulted related to path
+      searching.  See the Kpathsea manual.</para>
+    <!-- ===================================================================== -->
+  </refsect1>
+
+  <refsect1 id='files'><title>FILES</title>
+    <para>The location of the files mentioned below varies from system to
+      system.  Use the
+      <emphasis role='strong' remap='B'>kpsewhich</emphasis>
+      utility to find their locations.</para>
+    <variablelist remap='TP'>
+      <varlistentry>
+        <term><emphasis remap='I'>pdftex.map</emphasis></term>
+        <listitem>
+          <para>Font name mapping definitions.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis remap='I'>*.tfm</emphasis></term>
+        <listitem>
+          <para>Metric files for pdfTeX's fonts.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis remap='I'>*.fmt</emphasis></term>
+        <listitem>
+          <para>Predigested pdfTeX format (.&thinsp;fmt) files.</para>
+          <!-- br
+          ===================================================================== -->
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1 id='notes'><title>NOTES</title>
+    <para>Starting with version 1.40, pdfTeX incorporates the e-TeX
+      extensions, and pdfeTeX is just a copy of pdfTeX.  See
+      <citerefentry><refentrytitle>etex</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+      This manual page is not meant to be exhaustive.  The complete
+      documentation for this version of pdfTeX can be found in the
+      <emphasis remap='I'>pdfTeX manual</emphasis>
+      and the info manual
+      <emphasis remap='I'>Web2C: A TeX implementation</emphasis>.</para>
+    <!-- ===================================================================== -->
+  </refsect1>
+
+  <refsect1 id='bugs'><title>BUGS</title>
+    <para>This version of pdfTeX fails to trap arithmetic overflow when
+      dimensions are added or subtracted.  Cases where this occurs are rare,
+      but when it does the generated
+      <emphasis remap='I'>DVI</emphasis>
+      file will be invalid.  Whether a generated
+      <emphasis remap='I'>PDF</emphasis>
+      file would be usable is unknown.</para>
+    <!-- ===================================================================== -->
+  </refsect1>
+
+  <refsect1 id='availability'><title>AVAILABILITY</title>
+    <para>pdfTeX is available for a large variety of machine architectures
+      and operating systems.
+      pdfTeX is part of all major TeX distributions.
+      <!-- br -->
+      The pdfTeX home page: <ulink url='http://www.pdftex.org'>http://www.pdftex.org</ulink>.
+      <!-- br -->
+      pdfTeX on CTAN: <ulink url='http://www.ctan.org/pkg/pdftex'>http://www.ctan.org/pkg/pdftex</ulink>.
+      <!-- br -->
+      pdfTeX mailing list for all discussion: <ulink url='http://lists.tug.org/pdftex'>http://lists.tug.org/pdftex</ulink>.</para>
+    <!-- ===================================================================== -->
+  </refsect1>
+
+  <refsect1 id='see_also'><title>SEE ALSO</title>
+    <para>The full pdfTeX manual can be accessed from the home page or CTAN page.
+      Same for the Web2C, Kpathsea, and other manuals.
+      Some related programs:
+      <citerefentry><refentrytitle>epstopdf</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+      <citerefentry><refentrytitle>etex</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+      <citerefentry><refentrytitle>latex</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+      <citerefentry><refentrytitle>luatex</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+      <citerefentry><refentrytitle>mptopdf</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+      <citerefentry><refentrytitle>tex</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+      <citerefentry><refentrytitle>mf</refentrytitle><manvolnum>1</manvolnum></citerefentry>.</para>
+    <!-- ===================================================================== -->
+  </refsect1>
+
+  <refsect1 id='authors'><title>AUTHORS</title>
+    <para>The primary authors of pdfTeX are Han The Thanh, Petr Sojka,
+      Jiri Zlatuska, and Peter Breitenlohner (eTeX).</para>
+
+    <para>TeX was designed by Donald E. Knuth,
+      who implemented it using his Web system for Pascal programs.
+      It was ported to Unix at Stanford by Howard Trickey, and
+      at Cornell by Pavel Curtis.
+      The version now offered with the Unix TeX distribution is that
+      generated by the Web to C system
+      (<emphasis role='strong' remap='B'>web2c</emphasis>),
+      originally written by Tomas Rokicki and Tim Morgan.</para>
+
+    <para>The encTeX extensions were written by Petr Olsak.</para>
+    <!-- vim: syntax=nroff -->
+  </refsect1>
+</refentry>
+
