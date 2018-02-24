@@ -55,8 +55,8 @@ var _ = Describe("utils functions", func() {
 			),
 		)
 	})
-	DescribeTable("splitOptExpression function", func(synopsis string, expectedMatched bool, expectedOutput []string) {
-		expression, concreteMatched := splitOptExpression(synopsis)
+	DescribeTable("findOptionalExplicitAssignment function", func(synopsis string, expectedMatched bool, expectedOutput []string) {
+		expression, concreteMatched := findOptionalExplicitAssignment(synopsis)
 		Expect(concreteMatched).To(Equal(expectedMatched), "didn't match expected bool return")
 		Expect(expression).To(ConsistOf(copyStringToInterface(expectedOutput)...), "didn't match expected expression array")
 	},

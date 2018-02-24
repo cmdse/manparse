@@ -27,31 +27,42 @@ func newOptionSynopsis(reporter *reporter.ParseReporter, raw string, expressions
 	}
 }
 
+func (synopsis *optionSynopsis) handleOptionAssignment(synopses *optionSynopses, guess *guesses.Guess, finder func(expression string) ([]string, bool)) bool {
+	expr := synopsis.expressions[0]
+	split, ok := finder(expr)
+	if ok {
+		synopsis.ReportGuessf(
+			guess,
+			"I found an option expression '%v' witch looked like an optional option assignment, so I split it to two synopsis.",
+			expr)
+		flagSynopsis := newOptionSynopsis(
+			synopsis.ParseReporter,
+			split[0],
+			[]string{split[0]},
+			synopsis.description,
+		)
+		assignmentSynopsis := newOptionSynopsis(
+			synopsis.ParseReporter,
+			split[1],
+			[]string{split[1]},
+			synopsis.description,
+		)
+		synopses.append(flagSynopsis, assignmentSynopsis)
+	}
+	return ok
+}
+
 func (synopsis *optionSynopsis) splitSynopsisIfOptionalAssignment() optionSynopses {
 	var newSynopses = make(optionSynopses, 0, 2)
 	synopsis.SetContextf("[Split optional assignments] Synopsis '%v'", synopsis.raw)
 	defer synopsis.RedeemContext()
 	if len(synopsis.expressions) == 1 {
-		expr := synopsis.expressions[0]
-		split, ok := splitOptExpression(expr)
-		if ok {
-			synopsis.ReportGuessf(
-				guesses.OptionalImplicitAssignment,
-				"I found an option expression '%v' witch looked like an optional option assignment, so I split it to two synopsis.",
-				expr)
-			newSynopses = append(newSynopses,
-				newOptionSynopsis(
-					synopsis.ParseReporter,
-					split[0],
-					[]string{split[0]},
-					synopsis.description,
-				),
-				newOptionSynopsis(
-					synopsis.ParseReporter,
-					split[1],
-					[]string{split[1]},
-					synopsis.description,
-				))
+		foundExplicitAssignment := synopsis.handleOptionAssignment(&newSynopses, guesses.OptionalExplicitAssignment, findOptionalExplicitAssignment)
+		if foundExplicitAssignment {
+			return newSynopses
+		}
+		foundImplicitAssignment := synopsis.handleOptionAssignment(&newSynopses, guesses.OptionalImplicitAssignment, findOptionalImplicitAssignment)
+		if foundImplicitAssignment {
 			return newSynopses
 		}
 	}

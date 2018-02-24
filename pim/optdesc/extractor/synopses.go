@@ -1,6 +1,8 @@
 package extractor
 
-import "github.com/cmdse/manparse/reporter"
+import (
+	"github.com/cmdse/manparse/reporter"
+)
 
 type optionSynopses []*optionSynopsis
 
@@ -27,4 +29,8 @@ func (synopses *optionSynopses) handleSynopsesToSplit() {
 		newSynopses = append(newSynopses, splitSynpses...)
 	}
 	*synopses = newSynopses
+}
+
+func (synopses *optionSynopses) append(toAppendSynopses ...*optionSynopsis) {
+	*synopses = append(*synopses, toAppendSynopses...)
 }

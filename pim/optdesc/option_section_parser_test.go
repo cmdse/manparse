@@ -34,7 +34,7 @@ var _ = Describe("OptionSectionParser", func() {
 			flattenChildren := bubbleNodes(section.Children, isSection)
 			Expect(flattenChildren).To(HaveLen(23))
 		})
-		FIt("should work with nested subsections", func() {
+		It("should work with nested subsections", func() {
 			findCommands := func(docbook *docbook.ManDocBookXml) *section.Section {
 				return findSection(docbook, "COMMANDS")
 			}

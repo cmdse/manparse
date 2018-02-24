@@ -21,8 +21,13 @@ var _ = Describe("extraction functions", func() {
 			model := ExtractOptDescription(mandoc, GinkgoWriter)
 			Expect(model).To(HaveLen(11))
 		})
-		It("should handle optional assignment expressions by splitting synopsis is two", func() {
-			mandoc, _ := docbook.Unmarshal("./test/test-optional-assignment.xml")
+		It("should handle optional explicit assignment expressions by splitting synopsis in two", func() {
+			mandoc, _ := docbook.Unmarshal("./test/test-optional-explicit-assignment.xml")
+			model := ExtractOptDescription(mandoc, GinkgoWriter)
+			Expect(model).To(HaveLen(3))
+		})
+		It("should handle optional implicit assignment expressions by splitting synopsis in two", func() {
+			mandoc, _ := docbook.Unmarshal("./test/test-optional-implicit-assignment.xml")
 			model := ExtractOptDescription(mandoc, GinkgoWriter)
 			Expect(model).To(HaveLen(3))
 		})
