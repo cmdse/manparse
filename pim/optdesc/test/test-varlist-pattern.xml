@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!-- lifted from man+troff by doclifter -->
+<refentry>
+  <refsect1 id='options'><title>OPTIONS</title>
+    <para>The build flags are shared by the build, install, run, and test commands:</para>
+    <variablelist remap='TP'>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-a</emphasis></term>
+        <listitem>
+          <para>force rebuilding of packages that are already up-to-date.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-n</emphasis></term>
+        <listitem>
+          <para>print the commands but do not run them.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-p n</emphasis></term>
+        <listitem>
+          <para>the number of builds that can be run in parallel. The default is the number of CPUs available.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-v</emphasis></term>
+        <listitem>
+          <para>print the names of packages as they are compiled.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-work</emphasis></term>
+        <listitem>
+          <para>print the name of the temporary work directory and do not delete it when exiting.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-x</emphasis></term>
+        <listitem>
+          <para>print the commands.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-compiler name</emphasis></term>
+        <listitem>
+          <para>name of compiler to use, as in runtime.Compiler (gccgo or gc)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-gccgoflags 'arg list'</emphasis></term>
+        <listitem>
+          <para>arguments to pass on each gccgo compiler/linker invocation</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-gcflags 'arg list'</emphasis></term>
+        <listitem>
+          <para>arguments to pass on each 5g, 6g, or 8g compiler invocation</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-ldflags 'flag list'</emphasis></term>
+        <listitem>
+          <para>arguments to pass on each 5l, 6l, or 8l linker invocation</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><emphasis role='strong' remap='B'>-tags 'tag list'</emphasis></term>
+        <listitem>
+          <para>a list of build tags to consider satisfied during the build.
+            See the documentation for the go/build package for
+            more information about build tags.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>For more about specifying packages, see <citerefentry><refentrytitle>go-packages</refentrytitle><manvolnum>7</manvolnum></citerefentry>.</para>
+
+    <para>For more about where packages and binaries are installed, see <citerefentry><refentrytitle>go-gopath</refentrytitle><manvolnum>1</manvolnum></citerefentry>.</para>
+
+  </refsect1>
+</refentry>
+

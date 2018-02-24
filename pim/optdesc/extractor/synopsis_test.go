@@ -76,12 +76,4 @@ var _ = Describe("optSynopsis struct", func() {
 			),
 		)
 	})
-	Describe("ParseExtracts method", func() {
-		// TODO implement tests
-		//Entry("should handle an optional option value assignment to the combination of flag + assignment",
-		//"--context[=CTX]",
-		//schema.NewStandaloneMatchModel(schema.VariantGNUSwitch, "context"),
-		//schema.NewAssignmentMatchModel(schema.VariantGNUExplicitAssignment, "context", "CTX"),
-		//),
-	})
 })

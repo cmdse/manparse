@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!-- lifted from DocBook+man+troff by doclifter -->
+<refentry>
+  <refnamediv>
+    <refname>git</refname>
+    <refpurpose>the stupid content tracker</refpurpose>
+  </refnamediv>
+
+  <refsect1 id='commands'><title>COMMANDS</title>
+
+    <para>We separate the porcelain commands into the main commands and some ancillary user utilities.</para>
+
+    <refsect2 id='main_porcelain_commands'><title>Main porcelain commands</title>
+
+      <para><citerefentry><refentrytitle>git-add</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+      <literallayout remap='RS'>
+        Add file contents to the index.
+      </literallayout> <!-- remap='RE' -->
+
+      <para><citerefentry><refentrytitle>git-am</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+      <literallayout remap='RS'>
+        Apply a series of patches from a mailbox.
+      </literallayout> <!-- remap='RE' -->
+    </refsect2>
+
+    <refsect2 id='ancillary_commands'><title>Ancillary Commands</title>
+      <para><citerefentry><refentrytitle>git-send-email</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+      <literallayout remap='RS'>
+        Send a collection of patches as emails.
+      </literallayout> <!-- remap='RE' -->
+
+      <para><citerefentry><refentrytitle>git-svn</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+      <literallayout remap='RS'>
+        Bidirectional operation between a Subversion repository and Git.
+      </literallayout> <!-- remap='RE' -->
+    </refsect2>
+  </refsect1>
+</refentry>
+

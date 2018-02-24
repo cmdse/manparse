@@ -53,6 +53,16 @@ func findBestMatch(docbook *docbook.ManDocBookXml) *section.Section {
 	return bestMatch
 }
 
+func findSection(docbook *docbook.ManDocBookXml, sectionName string) *section.Section {
+	candidates := docbook.Sections
+	for _, can := range candidates {
+		if can.Title == sectionName {
+			return can
+		}
+	}
+	return nil
+}
+
 // This function does its best to extract an option description model from a docbook structure.
 // Writer argument can be either nil (no logging) or an io.Writer to write failures and guesses.
 // Returns nil if cannot find any opt description

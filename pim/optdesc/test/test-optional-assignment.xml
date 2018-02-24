@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!-- lifted from man+troff by doclifter -->
+<refentry>
+    <refsect1 id='options'><title>OPTIONS</title>
+        <para>If called without arguments
+            <emphasis role='strong' remap='B'>doclifter</emphasis>
+            acts as a filter, translating troff source input on standard input to DocBook markup on standard output. If called with arguments, each argument file is translated separately (but hints are retained, see below); the suffix
+            .xml
+            is given to the translated output.</para>
+
+        <para>-h</para>
+        <programlisting remap='RS'>
+            Name a file to which information on semantic hints gathered during analysis should be written.
+        </programlisting> <!-- remap='RE' -->
+
+        <para>--context[=CTX]</para>
+        <blockquote remap='RS'>
+            <para>
+                The context option ....
+            </para></blockquote> <!-- remap='RE' -->
+    </refsect1>
+</refentry>
