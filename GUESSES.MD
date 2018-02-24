@@ -66,20 +66,21 @@ It's likely that the intended POSIX switch is an assignment with the second opti
 > The description fields should be reviewed by user.
 
 
-#### Example (invented)
+#### Example (`git`)
 
 **this**
 ```
---context[=CTX]
-      provide CTX, default to ...
+--exec-path[=<path>]
+      Path to wherever your core Git programs are installed...
+      If no path is given, git will print the current setting and then exit.
 ```
 
-**should be interpreted as**
+**should be interpreted as** (with user feedback for description parts)
 ```
---context
-      provide default context ...
---context=CTX
-      provide context ...
+--exec-path
+      Path to wherever your core Git programs are installed...
+--exec-path=<path>
+      Print the current exec-path setting and exit.
 ```
 
 ### OPTIONAL_IMPLICIT_ASSIGNMENT
