@@ -48,7 +48,7 @@
 
 [[constraint]]
   name = "github.com/cmdse/core"
-  revision = "a949a257cb94547f13d857b1bc9aab40e3c1b18b"
+  revision = "b86ed61fcd45b926ebbe11b58042af3a86945a0d"
 
 [[constraint]]
   name = "github.com/emirpasic/gods"
