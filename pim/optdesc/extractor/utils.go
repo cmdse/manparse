@@ -3,10 +3,28 @@ package extractor
 import (
 	"fmt"
 	"regexp"
+	"strings"
+
+	"github.com/cmdse/core/schema"
 )
 
 // match patterns like [=optional-value]
 var matchOptionalAssignmentValue = regexp.MustCompile(`^(\S+)\[=(\S+)\]$`)
+
+// match option expressions delimiters in option synopses
+var regexGroupDelimiter = regexp.MustCompile(`,\s+`)
+
+func splitSynopsis(synopsis string) (groups []string) {
+	return regexGroupDelimiter.Split(synopsis, -1)
+}
+
+func formatVariantNames(variants []*schema.OptExpressionVariant) string {
+	names := make([]string, len(variants))
+	for i, variant := range variants {
+		names[i] = variant.Name()
+	}
+	return strings.Join(names, ", ")
+}
 
 // splitOptExpression tries to match an optional value assignment pattern
 // it returns an array of those expressions and true if matched

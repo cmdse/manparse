@@ -2,22 +2,28 @@ package extractor
 
 import (
 	"github.com/cmdse/core/schema"
+	"github.com/cmdse/manparse/reporter"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Extractor struct", func() {
-	Describe("matchModelsFromSynopsis method", func() {
+func optSynopsisFrom(rawSynopsis string) *optionSynopsis {
+	return &optionSynopsis{
+		reporter.NewParseReporter(""),
+		rawSynopsis,
+		splitSynopsis(rawSynopsis),
+		"",
+	}
+}
+
+var _ = Describe("optSynopsis struct", func() {
+	Describe("extractMatchModels method", func() {
 		DescribeTable("expected outputted MatchModels",
 			func(synopsis string, expectedMatchModels ...*schema.MatchModel) {
-				extractor := NewExtractor(nil, "")
-				matchModels := extractor.matchModelsFromSynopsis(&optionSynopsis{
-					synopsis,
-					splitSynopsis(synopsis),
-					"",
-				})
-				Expect(extractor.Failures).To(HaveLen(0))
+				synopis := optSynopsisFrom(synopsis)
+				matchModels := synopis.extractMatchModels()
+				Expect(synopis.Failures).To(HaveLen(0))
 				Expect(matchModels).To(HaveLen(len(expectedMatchModels)))
 				for i, model := range matchModels {
 					expected := expectedMatchModels[i]
