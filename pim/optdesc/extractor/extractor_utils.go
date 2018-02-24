@@ -10,6 +10,35 @@ import (
 
 var whitespacesRegex = regexp.MustCompile(`\s+`)
 
+func (extractor *Extractor) splitSynopsisIfOptionalAssignment(synopsis *optionSynopsis) []*optionSynopsis {
+	var newSynopses []*optionSynopsis
+	extractor.SetContextf("[Split optional assignments] Synopsis '%v'", synopsis.raw)
+	defer extractor.RedeemContext()
+	if len(synopsis.expressions) == 1 {
+		expr := synopsis.expressions[0]
+		split, ok := splitOptExpression(expr)
+		if ok {
+			extractor.ReportGuessf(
+				guesses.OptionalImplicitAssignment,
+				"I found an option expression '%v' witch looked like an optional option assignment, so I split it to two synopsis.",
+				expr)
+			newSynopses = append(newSynopses,
+				&optionSynopsis{
+					split[0],
+					[]string{split[0]},
+					synopsis.description,
+				},
+				&optionSynopsis{
+					split[1],
+					[]string{split[1]},
+					synopsis.description,
+				})
+			return newSynopses
+		}
+	}
+	return extractor.synopses
+}
+
 func (extractor *Extractor) extractToOptDescription(synopsis *optionSynopsis) *schema.OptDescription {
 	matchModels := extractor.matchModelsFromSynopsis(synopsis)
 	if len(matchModels) > 0 {
@@ -17,9 +46,8 @@ func (extractor *Extractor) extractToOptDescription(synopsis *optionSynopsis) *s
 			Description: synopsis.description,
 			MatchModels: matchModels,
 		}
-	} else {
-		return nil
 	}
+	return nil
 }
 
 func (extractor *Extractor) matchModelsFromSynopsis(synopsis *optionSynopsis) schema.MatchModels {
@@ -27,19 +55,24 @@ func (extractor *Extractor) matchModelsFromSynopsis(synopsis *optionSynopsis) sc
 	expressions := normalize.NormalizeOptDescriptions(synopsis.expressions)
 	argsList := make([][]string, len(expressions))
 	for i, expr := range expressions {
-		extractor.SetContextf("with option expression '%v'", synopsis.expressions)
-		args := whitespacesRegex.Split(expr, -1)
+		model, args := extractor.extractModelFromOptionExpression(expr)
 		argsList[i] = args
-		tokens := ParseOptSynopsis(args)
-		matchModel := extractor.optionPartsToToMatchModel(tokens)
-		if matchModel == nil {
-			return nil
+		if model != nil {
+			models = append(models, model)
 		} else {
-			models = append(models, matchModel)
+			return nil
 		}
-		extractor.RedeemContext()
 	}
 	return extractor.normalizeModelsAssignments(models, argsList)
+}
+
+func (extractor *Extractor) extractModelFromOptionExpression(expr string) (*schema.MatchModel, []string) {
+	extractor.SetContextf("with option expression '%v'", expr)
+	defer extractor.RedeemContext()
+	args := whitespacesRegex.Split(expr, -1)
+	tokens := ParseOptSynopsis(args)
+	matchModel := extractor.optionPartsToToMatchModel(tokens)
+	return matchModel, args
 }
 
 func (extractor *Extractor) optionPartsToToMatchModel(optParts schema.TokenList) *schema.MatchModel {
@@ -49,7 +82,7 @@ func (extractor *Extractor) optionPartsToToMatchModel(optParts schema.TokenList)
 		case *schema.SemanticTokenType:
 			semanticTypes[i] = ttype
 		case *schema.ContextFreeTokenType:
-			extractor.ReportFailuref("failure to extract MatchModel: '%v' token could not be converted to semantic type ; found instead '%v' with candidate '%v' ", token.Value, token.Ttype.Name(), token.SemanticCandidates)
+			extractor.ReportSkipf("could not extract MatchModel: '%v' token could not be converted to semantic type ; found instead '%v' with candidate '%v' ", token.Value, token.Ttype.Name(), token.SemanticCandidates)
 			return nil
 		}
 	}
@@ -103,8 +136,9 @@ func (extractor *Extractor) convertPOSIXFlagsToAssignments(synopsis schema.Match
 				synopsis[i] = matchModel
 				extractor.ReportGuessf(
 					guesses.SuggestedPosixImplicitAssignment,
-					"a synopsis had the latest option expression with implicit assignment of param '%v' and foremost has no option assignment, so I guessed it should have an implicit option assignment",
+					"the latest option expression has an implicit assignment of param '%v' while foremost has no option assignment, so I guessed it should have an implicit option assignment",
 					assignmentParamName)
+				extractor.RedeemContext()
 				break
 			} else {
 				extractor.ReportFailuref("didn't expect match model extraction to fail for optionSynopsis : %v", args)

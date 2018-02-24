@@ -18,7 +18,7 @@ func (parser *SectionParser) ExtractModel(sec *section.Section, writer io.Writer
 		return nil
 	}
 	rawExtracts := parser.aggregateExtracts(parser, sec)
-	extractor := extractor.NewExtractor(rawExtracts)
+	extractor := extractor.NewExtractor(rawExtracts, sec.Title)
 	extractor.SetWriter(writer)
 	return extractor.ParseExtracts()
 }

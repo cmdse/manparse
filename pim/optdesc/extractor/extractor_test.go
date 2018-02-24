@@ -11,7 +11,7 @@ var _ = Describe("Extractor struct", func() {
 	Describe("matchModelsFromSynopsis method", func() {
 		DescribeTable("expected outputted MatchModels",
 			func(synopsis string, expectedMatchModels ...*schema.MatchModel) {
-				extractor := NewExtractor(nil)
+				extractor := NewExtractor(nil, "")
 				matchModels := extractor.matchModelsFromSynopsis(&optionSynopsis{
 					synopsis,
 					splitSynopsis(synopsis),

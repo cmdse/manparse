@@ -1,5 +1,6 @@
 package optdesc
 
 var DescriptionSectionParser = SectionParser{
-	TargetSection: descriptionSectionName,
+	TargetSection:     descriptionSectionName,
+	aggregateExtracts: OptionSectionParser.aggregateExtracts,
 }

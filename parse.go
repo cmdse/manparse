@@ -31,6 +31,5 @@ func main() {
 	mandoc, err = docbook.Unmarshal(file)
 	checkUnmarshalErr(err, file)
 	fmt.Printf("COMMAND: %#v\n", mandoc.CmdSynopsis.Command)
-	pim := pim.ExtractPIMFromDocBook(mandoc, os.Stdout)
-	fmt.Printf("DESCRIPTION MODEL: %v\n", pim.DescriptionModel())
+	pim.ExtractPIMFromDocBook(mandoc, os.Stdout)
 }

@@ -10,6 +10,10 @@ type Report struct {
 
 type Reports []*Report
 
+func (report *Report) Inline() string {
+	return fmt.Sprintf("%v %v", report.context, report.Message)
+}
+
 func (reports *Reports) addReport(reporter *ParseReporter, message string, kind string) {
 	report := &Report{
 		Kind:    kind,
@@ -18,6 +22,6 @@ func (reports *Reports) addReport(reporter *ParseReporter, message string, kind 
 	}
 	*reports = append(*reports, report)
 	if reporter.writer != nil {
-		fmt.Fprintf(reporter.writer, "%v\n", report.Message)
+		fmt.Fprintf(reporter.writer, "%v\n", report.Inline())
 	}
 }

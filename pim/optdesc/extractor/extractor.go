@@ -1,9 +1,10 @@
 package extractor
 
 import (
+	"strings"
+
 	"github.com/cmdse/core/schema"
 	"github.com/cmdse/manparse/reporter"
-	"github.com/cmdse/manparse/reporter/guesses"
 )
 
 type optionSynopsis struct {
@@ -19,9 +20,9 @@ type Extractor struct {
 	descriptionModel schema.OptDescriptionModel
 }
 
-func NewExtractor(extracts RawOptExtracts) *Extractor {
+func NewExtractor(extracts RawOptExtracts, rootContext string) *Extractor {
 	return &Extractor{
-		ParseReporter:    reporter.NewParseReporter(),
+		ParseReporter:    reporter.NewParseReporter(rootContext),
 		extracts:         dryUpOptExtract(extracts),
 		descriptionModel: make(schema.OptDescriptionModel, 0, 10),
 	}
@@ -29,7 +30,7 @@ func NewExtractor(extracts RawOptExtracts) *Extractor {
 
 func (extractor *Extractor) ParseExtracts() schema.OptDescriptionModel {
 	extractor.makeOptionSynopses()
-	extractor.handleSynopsisToSplit()
+	extractor.handleSynopsesToSplit()
 	extractor.convertExtractsToOptDescription()
 	return extractor.descriptionModel
 }
@@ -46,45 +47,30 @@ func (extractor *Extractor) makeOptionSynopses() {
 	extractor.synopses = optionSynopsises
 }
 
-func (extractor *Extractor) handleSynopsisToSplit() {
+func (extractor *Extractor) handleSynopsesToSplit() {
 	var newSynopses []*optionSynopsis
 	for _, synopsis := range extractor.synopses {
-		extractor.SetContextf("In synopsis %v", synopsis.raw)
-		if len(synopsis.expressions) == 1 {
-			expr := synopsis.expressions[0]
-			split, ok := splitOptExpression(expr)
-			if ok {
-				extractor.ReportGuessf(
-					guesses.OptionalImplicitAssignment,
-					"I found an option expression '%v' witch looked like an optional option assignment, so I split it to two synopsis.",
-					expr)
-				newSynopses = append(newSynopses,
-					&optionSynopsis{
-						split[0],
-						[]string{split[0]},
-						synopsis.description,
-					},
-					&optionSynopsis{
-						split[1],
-						[]string{split[1]},
-						synopsis.description,
-					})
-				continue
-			}
-		}
-		newSynopses = append(newSynopses, synopsis)
-		extractor.RedeemContext()
+		newSynopses = extractor.splitSynopsisIfOptionalAssignment(synopsis)
 	}
 	extractor.synopses = newSynopses
 }
 
+func formatVariantNames(variants []*schema.OptExpressionVariant) string {
+	names := make([]string, len(variants))
+	for i, variant := range variants {
+		names[i] = variant.Name()
+	}
+	return strings.Join(names, ", ")
+}
+
 func (extractor *Extractor) convertExtractsToOptDescription() {
 	for _, synopsis := range extractor.synopses {
-		extractor.SetContextf("Synopsis %v ", synopsis.raw)
+		extractor.SetContextf("[extract] Synopsis '%v'", synopsis.raw)
 		optDescription := extractor.extractToOptDescription(synopsis)
 		if optDescription != nil {
 			extractor.descriptionModel = append(extractor.descriptionModel, optDescription)
-			extractor.ReportSuccessf("successfully extracted with option expressions variants : %v", extractor.descriptionModel.Variants())
+			variantNames := formatVariantNames(extractor.descriptionModel.Variants())
+			extractor.ReportSuccessf("extracted with option expression variant(s) : '%v'", variantNames)
 		}
 		extractor.RedeemContext()
 	}
