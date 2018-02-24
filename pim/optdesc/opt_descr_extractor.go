@@ -39,10 +39,7 @@ func extractOptDescriptionFromSection(sec *section.Section, writer io.Writer) (m
 	return model
 }
 
-// This function does its best to extract an option description model from a docbook structure.
-// Writer argument can be either nil (no logging) or an io.Writer to write failures and guesses.
-// Returns nil if cannot find any opt description
-func ExtractOptDescription(docbook *docbook.ManDocBookXml, writer io.Writer) (model schema.OptDescriptionModel) {
+func findBestMatch(docbook *docbook.ManDocBookXml) *section.Section {
 	candidates := makeCandidates(docbook)
 	var bestMatch *section.Section
 	for _, can := range candidates {
@@ -53,6 +50,14 @@ func ExtractOptDescription(docbook *docbook.ManDocBookXml, writer io.Writer) (mo
 			break
 		}
 	}
+	return bestMatch
+}
+
+// This function does its best to extract an option description model from a docbook structure.
+// Writer argument can be either nil (no logging) or an io.Writer to write failures and guesses.
+// Returns nil if cannot find any opt description
+func ExtractOptDescription(docbook *docbook.ManDocBookXml, writer io.Writer) (model schema.OptDescriptionModel) {
+	var bestMatch = findBestMatch(docbook)
 	if bestMatch != nil {
 		return extractOptDescriptionFromSection(bestMatch, writer)
 	} else {

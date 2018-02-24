@@ -9,32 +9,22 @@ import (
 
 var regexIsSection = regexp.MustCompile(`^refsect[123]|refsection$`)
 
-// -L, --dereference
-// -p
-// -P
-// -h
-// -ldflags 'flag list'
-// -file-line-error-style
-// -interaction mode
-// -output-directory directory
-// --parents
-// -t, --target-directory=DIRECTORY
-// --context[=CTX]
-// --backup[=CONTROL]
-// -a, --archive
-// --warnings[=warnings]
-// -C file, --config-file=file
-// -L locale, --locale=locale
-// -e sub-extension, --extension=sub-extension
-// -m system[,...], --systems=system[,...]
 var regexIsOptionSynopsis = regexp.MustCompile(`^(-|--).*$`)
+
+const (
+	DocbookNodeVariableList   = "variablelist"
+	DocbookNodeParagraph      = "para"
+	DocbookNodeLiteralLayout  = "literallayout"
+	DocbookNodeProgramListing = "programlisting"
+	DocbookNodeBlockQuote     = "blockquote"
+)
 
 func isSection(node *section.Node) bool {
 	return regexIsSection.MatchString(node.Type)
 }
 
 func isVarList(node *section.Node) bool {
-	return node.Type == "variablelist"
+	return node.Type == DocbookNodeVariableList
 }
 
 // This function returns a slice of nodes which are all comprised of "non-predicate" children.
@@ -82,7 +72,7 @@ func aggregateRelevantNode(children section.Nodes) extractor.RawOptExtracts {
 		// create a unique variable list by concatenating all variable lists
 		nodes := bubbleNodes(varLists, isVarList)
 		varList := &section.Node{
-			Type:     "variablelist",
+			Type:     DocbookNodeVariableList,
 			Element:  nil,
 			Children: nodes,
 		}
@@ -96,34 +86,32 @@ func aggregateRelevantNode(children section.Nodes) extractor.RawOptExtracts {
 //      literallayout | programlisting | blockquote : optDescription
 //
 func matchSiblingPattern(current *section.Node, next *section.Node) bool {
-	return current.Type == "par" &&
+	return current.Type == DocbookNodeParagraph &&
 		regexIsOptionSynopsis.MatchString(current.Flatten()) &&
-		(next.Type == "literallayout" || next.Type == "programlisting" || next.Type == "blockquote")
+		(next.Type == DocbookNodeLiteralLayout || next.Type == DocbookNodeProgramListing || next.Type == DocbookNodeBlockQuote)
 }
 
 func aggregateSiblingsToExtract(nodes section.Nodes) extractor.RawOptExtracts {
 	rawOptExtracts := make(extractor.RawOptExtracts, 0, 15)
 	var skip = new(int)
 	*skip = 1
-	for index := 0; index < len(nodes); index = index + *skip {
+	index := 0
+	for index < len(nodes)-1 {
 		node := nodes[index]
-		// TODO test
-		if index+1 < len(nodes) {
-			sibling := nodes[index+1]
-			if matchSiblingPattern(node, sibling) {
-				extract := extractor.NewRawOptExtract(node, sibling)
-				rawOptExtracts = append(rawOptExtracts, extract)
-				*skip = 2
-				break
-			}
+		sibling := nodes[index+1]
+		if matchSiblingPattern(node, sibling) {
+			extract := extractor.NewRawOptExtract(node, sibling)
+			rawOptExtracts = append(rawOptExtracts, extract)
+			*skip = 2
 		}
+		index = index + *skip
 	}
 	*skip = 1
 	return rawOptExtracts
 }
 
 var OptionSectionParser = SectionParser{
-	TargetSection: "OPTION",
+	TargetSection: optionSectionName,
 	aggregateExtracts: func(parser *SectionParser, section *section.Section) extractor.RawOptExtracts {
 		// flatten sections, if any sub-sections
 		flattenChildren := bubbleNodes(section.Children, isSection)

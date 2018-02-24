@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!-- lifted from man+troff by doclifter -->
+<refentry>
+    <refsect1 id='options'><title>OPTIONS</title>
+        <para>If called without arguments
+            <emphasis role='strong' remap='B'>doclifter</emphasis>
+            acts as a filter, translating troff source input on standard input to DocBook markup on standard output. If called with arguments, each argument file is translated separately (but hints are retained, see below); the suffix
+            .xml
+            is given to the translated output.</para>
+
+        <para>-h</para>
+        <programlisting remap='RS'>
+            Name a file to which information on semantic hints gathered during analysis should be written.
+        </programlisting> <!-- remap='RE' -->
+
+        <para>-D</para>
+        <blockquote remap='RS'>
+            <para>The
+                <emphasis role='strong' remap='B'>-D</emphasis>
+                allows you to post a hint. This may be useful, for example, if
+                <emphasis role='strong' remap='B'>doclifter</emphasis>
+                is mis-parsing a synopsis because it doesnt recognize a token as a command. This hint is merged after hints in the input source have been read.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-I</para>
+        <blockquote remap='RS'>
+            <para>The
+                <emphasis role='strong' remap='B'>-I</emphasis>
+                option adds its argument to the include path used when docfilter searches for inclusions. The include path is initially just the current directory.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-S</para>
+        <programlisting remap='RS'>
+            Set the filename to be used in error and warning messages. This is mainly inttended for use by test scripts.
+        </programlisting> <!-- remap='RE' -->
+
+        <para>-e</para>
+        <blockquote remap='RS'>
+            <para>The
+                <emphasis role='strong' remap='B'>-e</emphasis>
+                allows you to set the output encoding of the XML and the encoding field to be emitted in its header. It defaults to UTF-8.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-i</para>
+        <blockquote remap='RS'>
+            <para>The
+                <emphasis role='strong' remap='B'>-i</emphasis>
+                allows you to set a comma-separated list of encodings to be looked for in the input. The default is "ISO-8859-1,UTF-8", which should cover almost all cases.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-q</para>
+        <blockquote remap='RS'>
+            <para>Normally, requests that
+                <emphasis role='strong' remap='B'>doclifter</emphasis>
+                could not interpret (usually because theyre presentation-level) are passed through to XML comments in the output. The -q option suppresses this. It also suppresses listing of macros. Messages about requests that are unrecognized or cannot be translated go to standard error whatever the state of this option. This option is intended to reduce clutter when you believe you have a clean lift of a document and want to lose the troff legacy.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-x</para>
+        <blockquote remap='RS'>
+            <para>The -x option requests that
+                <emphasis role='strong' remap='B'>doclifter</emphasis>
+                generate DocBook version 5 compatible xml content, rather than its default DocBook version 4.4 output. Inclusions and entities may not be handled correctly with this switch enabled.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-v</para>
+        <blockquote remap='RS'>
+            <para>The -v option makes
+                <emphasis role='strong' remap='B'>doclifter</emphasis>
+                noisier about what its doing. This is mainly useful for debugging.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-w</para>
+        <blockquote remap='RS'>
+            <para>Enable strict portability checking. Multiple instances of -w increase the strictness. See
+                the section called &ldquo;PORTABILITY CHECKING&rdquo;.
+            </para></blockquote> <!-- remap='RE' -->
+
+        <para>-V</para>
+        <literallayout remap='RS'>
+            With this option, the program emits a version message and exits.
+        </literallayout> <!-- remap='RE' -->
+    </refsect1>
+</refentry>

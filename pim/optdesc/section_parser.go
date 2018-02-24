@@ -22,3 +22,7 @@ func (parser *SectionParser) ExtractModel(sec *section.Section, writer io.Writer
 	extractor.SetWriter(writer)
 	return extractor.ParseExtracts()
 }
+
+func (parser *SectionParser) AggregateExtracts(sec *section.Section) extractor.RawOptExtracts {
+	return parser.aggregateExtracts(parser, sec)
+}
