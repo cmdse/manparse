@@ -74,10 +74,13 @@ func (node *Node) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err erro
 	var token xml.Token
 	node.Type = start.Name.Local
 	token, _ = d.Token()
-	for token != nil && err == nil {
+	for token != nil {
 		switch ttype := token.(type) {
 		case xml.StartElement:
 			err = node.decodeTag(d, ttype)
+			if err != nil {
+				break
+			}
 		case xml.CharData:
 			node.handleCharData(ttype)
 		}

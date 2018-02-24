@@ -8,20 +8,17 @@ import (
 	"golang.org/x/net/html/charset"
 )
 
-func init() {
-	xml.HTMLEntity["bsol"] = "\\"
-	xml.HTMLEntity["sol"] = "/"
-}
-
 func makeReader(name string) (io.Reader, error) {
 	reader, err := os.Open(name)
 	return reader, err
 }
 
 func makeDecoder(reader io.Reader) *xml.Decoder {
+	xml.HTMLEntity["bsol"] = "\u005C"
+	xml.HTMLEntity["sol"] = "\u002F"
 	decoder := xml.NewDecoder(reader)
 	decoder.CharsetReader = charset.NewReaderLabel
-	decoder.Strict = true
+	decoder.Strict = false
 	decoder.Entity = xml.HTMLEntity
 	return decoder
 }
