@@ -23,8 +23,9 @@ var _ = Describe("ParseReporter", func() {
 		It("should add context", func() {
 			Expect(reporter.contexts.Values()).To(HaveLen(1))
 		})
+		last, _ := reporter.contexts.Peek()
 		It("should set lastContext", func() {
-			Expect(reporter.lastContext).To(Equal("this is context"))
+			Expect(last).To(Equal("this is context"))
 		})
 	})
 	Describe("ReleaseContext method", func() {

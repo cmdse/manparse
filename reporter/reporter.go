@@ -13,13 +13,12 @@ type ParseContext string
 
 // ParseReporter is a struct allowing to report parsing events with a dynamic scope for advanced pretty-print.
 type ParseReporter struct {
-	contexts    *ContextQueue
-	Failures    Reports
-	Guesses     Reports
-	Successes   Reports
-	Skips       Reports
-	writer      io.Writer
-	lastContext ParseContext
+	contexts  *ContextQueue
+	Failures  Reports
+	Guesses   Reports
+	Successes Reports
+	Skips     Reports
+	writer    io.Writer
 }
 
 // NewParseReporter creates an instance of ParseReporter
@@ -31,7 +30,6 @@ func NewParseReporter(rootContext string) *ParseReporter {
 		make(Reports, 0, 50),
 		make(Reports, 0, 50),
 		nil,
-		"",
 	}
 	reporter.SetContextf(rootContext)
 	return reporter
@@ -53,7 +51,6 @@ func (reporter *ParseReporter) SetWriter(writer io.Writer) {
 func (reporter *ParseReporter) SetContextf(context string, args ...interface{}) ParseContext {
 	pcontext := ParseContext(fmt.Sprintf(context, args...))
 	reporter.contexts.Push(pcontext)
-	reporter.lastContext = pcontext
 	return pcontext
 }
 
@@ -69,10 +66,8 @@ func (reporter *ParseReporter) ReleaseContext(contextToRel ParseContext) {
 	if !ok {
 		panic("ReleaseContext failed because there were more calls to ReleaseContext than SetContextf \n")
 	}
-	if reporter.lastContext != contextToRel {
-		panic(fmt.Sprintf("ReleaseContext call mismatched the last set context with SetContext or SetContextf\n\tfound: %v\n\texpected: %v", context, reporter.lastContext))
-	} else {
-		reporter.lastContext, _ = reporter.contexts.Peek()
+	if context != contextToRel {
+		panic(fmt.Sprintf("ReleaseContext call mismatched the last set context with SetContext or SetContextf\n\tfound: %v\n\texpected: %v", contextToRel, context))
 	}
 }
 
