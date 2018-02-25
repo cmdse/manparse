@@ -78,9 +78,9 @@ It's likely that the intended POSIX switch is an assignment with the second opti
 **should be interpreted as** (with user feedback for description parts)
 ```
 --exec-path
-      Path to wherever your core Git programs are installed...
+      <user input>
 --exec-path=<path>
-      Print the current exec-path setting and exit.
+      <user input>
 ```
 
 ### OPTIONAL_IMPLICIT_ASSIGNMENT
@@ -102,7 +102,31 @@ It's likely that the intended POSIX switch is an assignment with the second opti
 **should be interpreted as**
 ```
 --context
-      provide default context ...
+      <user input>
 --context CTX
-      provide context ...
+      <user input>
+```
+
+### OPTIONAL_REVERSE_SWITCH
+
+**An option synopsis holds an optional sequence of characters within a flag expression**
+
+> `manparse` should split the option synopsis in two, with one flag containing the optional part and the other dismissing it .
+> The description fields should be reviewed by user.
+
+
+#### Example (`git-clone`)
+
+**this**
+```
+--[no-]single-branch
+        Clone only the history leading to the tip of a single branch, either specified by the --branch option or the primary branch remote’s HEAD points at.
+```
+
+**should be interpreted as**
+```
+--single-branch
+      <user input>
+--no-single-branch
+      <user input>
 ```
