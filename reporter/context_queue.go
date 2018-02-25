@@ -12,15 +12,15 @@ func NewContextQueue() *ContextQueue {
 	}
 }
 
-func interfaceToParseContext(context interface{}, ok bool) (ParseContext, bool) {
-	if !ok {
-		return "", false
+func interfaceToParseContext(context interface{}, hasContext bool) (ParseContext, bool) {
+	if !hasContext {
+		goto return_empty
 	}
 	if context, ok := context.(ParseContext); ok {
 		return context, true
-	} else {
-		panic("unexpected type in ContextQueue#Pop")
 	}
+return_empty:
+	return "", false
 }
 
 func (cqueue *ContextQueue) Pop() (ParseContext, bool) {

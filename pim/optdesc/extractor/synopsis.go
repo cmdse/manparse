@@ -54,8 +54,8 @@ func (synopsis *optionSynopsis) handleOptionAssignment(synopses *optionSynopses,
 
 func (synopsis *optionSynopsis) splitSynopsisIfOptionalAssignment() optionSynopses {
 	var newSynopses = make(optionSynopses, 0, 2)
-	synopsis.SetContextf("[Split optional assignments] Synopsis '%v'", synopsis.raw)
-	defer synopsis.RedeemContext()
+	context := synopsis.SetContextf("[Split optional assignments] Synopsis '%v'", synopsis.raw)
+	defer synopsis.ReleaseContext(context)
 	if len(synopsis.expressions) == 1 {
 		foundExplicitAssignment := synopsis.handleOptionAssignment(&newSynopses, guesses.OptionalExplicitAssignment, findOptionalExplicitAssignment)
 		if foundExplicitAssignment {
@@ -70,13 +70,13 @@ func (synopsis *optionSynopsis) splitSynopsisIfOptionalAssignment() optionSynops
 }
 
 func (synopsis *optionSynopsis) toOptDescription() *schema.OptDescription {
-	synopsis.SetContextf("[extract] Synopsis '%v'", synopsis.raw)
+	context := synopsis.SetContextf("[extract] Synopsis '%v'", synopsis.raw)
 	optDescription := synopsis.extractOptDescription()
 	if optDescription != nil {
 		variantNames := formatVariantNames(optDescription.Variants())
 		synopsis.ReportSuccessf("extracted with option expression variant(s) : '%v'", variantNames)
 	}
-	synopsis.RedeemContext()
+	synopsis.ReleaseContext(context)
 	return optDescription
 }
 
@@ -108,8 +108,8 @@ func (synopsis *optionSynopsis) extractMatchModels() schema.MatchModels {
 }
 
 func (synopsis *optionSynopsis) extractModelFromOptionExpression(expr string) (*schema.MatchModel, []string) {
-	synopsis.SetContextf("with option expression '%v'", expr)
-	defer synopsis.RedeemContext()
+	context := synopsis.SetContextf("with option expression '%v'", expr)
+	defer synopsis.ReleaseContext(context)
 	args := whitespacesRegex.Split(expr, -1)
 	tokens := ParseOptSynopsis(args)
 	matchModel := synopsis.optionPartsToToMatchModel(tokens)
@@ -168,7 +168,7 @@ func (synopsis *optionSynopsis) findAssignmentInExpressions(matchModels schema.M
 func (synopsis *optionSynopsis) convertPOSIXFlagsToAssignments(matchModels schema.MatchModels, argsList [][]string, assignmentParamName string) {
 	for i, model := range matchModels {
 		// this MatchModel is not assignment
-		synopsis.SetContextf("expression '%v' with expression model '%v'", argsList[i], model.Variant().Name())
+		context := synopsis.SetContextf("expression '%v' with expression model '%v'", argsList[i], model.Variant().Name())
 		if model.ParamName() == "" {
 			args := append(argsList[i], assignmentParamName)
 			tokens := ParseOptSynopsis(args)
@@ -179,12 +179,12 @@ func (synopsis *optionSynopsis) convertPOSIXFlagsToAssignments(matchModels schem
 					guesses.SuggestedPosixImplicitAssignment,
 					"the latest option expression has an implicit assignment of param '%v' while foremost has no option assignment, so I guessed it should have an implicit option assignment",
 					assignmentParamName)
-				synopsis.RedeemContext()
+				synopsis.ReleaseContext(context)
 				break
 			} else {
 				synopsis.ReportFailuref("didn't expect match model extraction to fail for optionSynopsis : %v", args)
 			}
 		}
-		synopsis.RedeemContext()
+		synopsis.ReleaseContext(context)
 	}
 }
