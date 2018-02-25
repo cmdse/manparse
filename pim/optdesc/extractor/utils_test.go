@@ -14,6 +14,7 @@ func copyStringToInterface(strs []string) []interface{} {
 	return interfaces
 }
 
+// nolint: dupl
 var _ = Describe("utils functions", func() {
 	Describe("splitSynopsis function", func() {
 		DescribeTable("expected output",
@@ -65,11 +66,26 @@ var _ = Describe("utils functions", func() {
 			false,
 			[]string{"-L, --dereference"},
 		),
-		// TODO implement more tests to avoid false positive
 		Entry("when given a synopsis matching optional assignment value, it should succeed",
 			"--context[=CTX]",
 			true,
 			[]string{"--context=CTX", "--context"},
+		),
+	)
+	DescribeTable("findOptionalImplicitAssignment function", func(synopsis string, expectedMatched bool, expectedOutput []string) {
+		expression, concreteMatched := findOptionalImplicitAssignment(synopsis)
+		Expect(concreteMatched).To(Equal(expectedMatched), "didn't match expected bool return")
+		Expect(expression).To(ConsistOf(copyStringToInterface(expectedOutput)...), "didn't match expected expression array")
+	},
+		Entry("when given a synopsis with spaces, it should not succeed",
+			"-L, --dereference",
+			false,
+			[]string{"-L, --dereference"},
+		),
+		Entry("when given a synopsis matching optional assignment value, it should succeed",
+			"--context [CTX]",
+			true,
+			[]string{"--context CTX", "--context"},
 		),
 	)
 })
