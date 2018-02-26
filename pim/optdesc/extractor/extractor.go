@@ -24,6 +24,7 @@ func (extractor *Extractor) ParseExtracts() schema.OptDescriptionModel {
 	extractor.makeOptionSynopses()
 	extractor.handleSynopsesToSplit()
 	extractor.convertSynopsesToOptDescription()
+	extractor.WriteReports()
 	return extractor.descriptionModel
 }
 

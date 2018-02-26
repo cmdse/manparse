@@ -1,6 +1,7 @@
 package optdesc
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/cmdse/core/schema"
@@ -18,7 +19,7 @@ func (parser *SectionParser) ExtractModel(sec *section.Section, writer io.Writer
 		return nil
 	}
 	rawExtracts := parser.aggregateExtracts(parser, sec)
-	extractor := extractor.NewExtractor(rawExtracts, sec.Title)
+	extractor := extractor.NewExtractor(rawExtracts, fmt.Sprintf("%v section", sec.Title))
 	extractor.SetWriter(writer)
 	return extractor.ParseExtracts()
 }

@@ -19,21 +19,16 @@ var _ = Describe("ParseReporter", func() {
 	Describe("SetContextf method", func() {
 		reporter := NewParseReporter("foo")
 		reporter.SetWriter(GinkgoWriter)
-		reporter.SetContextf("this is context")
+		context := reporter.SetContextf("this is context")
 		It("should add context", func() {
-			Expect(reporter.contexts.Values()).To(HaveLen(1))
-		})
-		last, _ := reporter.contexts.Peek()
-		It("should set lastContext", func() {
-			Expect(last).To(Equal("this is context"))
+			Expect(reporter.lastContext()).To(Equal(context))
 		})
 	})
 	Describe("ReleaseContext method", func() {
 		reporter1 := NewParseReporter("foo")
 		reporter1.SetWriter(GinkgoWriter)
-		reporter1.ReleaseContext("foo")
 		causePanic1 := func() {
-			reporter1.ReleaseContext("")
+			reporter1.ReleaseContext(nil)
 		}
 		It("should panic when called while context queue is empty", func() {
 			Expect(causePanic1).To(Panic())
@@ -43,7 +38,8 @@ var _ = Describe("ParseReporter", func() {
 		reporter2.SetContextf("this is context")
 		causePanic2 := func() {
 			reporter2.SetContextf("Context A")
-			reporter2.ReleaseContext("Context B")
+			contextB := NewParseContext("Context B", nil, 1)
+			reporter2.ReleaseContext(contextB)
 		}
 		It("should panic when passed context does not match previous SetContextf returned context", func() {
 			Expect(causePanic2).To(Panic())
@@ -52,8 +48,8 @@ var _ = Describe("ParseReporter", func() {
 		reporter3.SetWriter(GinkgoWriter)
 		reporter3.SetContextf("this is context")
 		noPanic := func() {
-			reporter3.SetContextf("Context A")
-			reporter3.ReleaseContext("Context A")
+			contextA := reporter3.SetContextf("Context A")
+			reporter3.ReleaseContext(contextA)
 		}
 		It("should not panic when passed context does match previous SetContextf returned context", func() {
 			Expect(noPanic).ToNot(Panic())

@@ -33,8 +33,8 @@ func (synopsis *optionSynopsis) handleOptionAssignment(synopses *optionSynopses,
 	if ok {
 		synopsis.ReportGuessf(
 			guess,
-			"I found an option expression '%v' witch looked like an optional option assignment, so I split it to two synopsis.",
-			expr)
+			"found an option expression witch matches the optional option assignment pattern, so I split it to two synopsis, '%v' and '%v'",
+			split[0], split[1])
 		flagSynopsis := newOptionSynopsis(
 			synopsis.ParseReporter,
 			split[0],
@@ -54,7 +54,7 @@ func (synopsis *optionSynopsis) handleOptionAssignment(synopses *optionSynopses,
 
 func (synopsis *optionSynopsis) splitSynopsisIfOptionalAssignment() optionSynopses {
 	var newSynopses = make(optionSynopses, 0, 2)
-	context := synopsis.SetContextf("[Split optional assignments] Synopsis '%v'", synopsis.raw)
+	context := synopsis.SetContextf(synopsis.raw)
 	defer synopsis.ReleaseContext(context)
 	if len(synopsis.expressions) == 1 {
 		foundExplicitAssignment := synopsis.handleOptionAssignment(&newSynopses, guesses.OptionalExplicitAssignment, findOptionalExplicitAssignment)
@@ -70,11 +70,11 @@ func (synopsis *optionSynopsis) splitSynopsisIfOptionalAssignment() optionSynops
 }
 
 func (synopsis *optionSynopsis) toOptDescription() *schema.OptDescription {
-	context := synopsis.SetContextf("[extract] Synopsis '%v'", synopsis.raw)
+	context := synopsis.SetContextf(synopsis.raw)
 	optDescription := synopsis.extractOptDescription()
 	if optDescription != nil {
 		variantNames := formatVariantNames(optDescription.Variants())
-		synopsis.ReportSuccessf("extracted with option expression variant(s) : '%v'", variantNames)
+		synopsis.ReportSuccessf("found '%v'", variantNames)
 	}
 	synopsis.ReleaseContext(context)
 	return optDescription
@@ -108,8 +108,6 @@ func (synopsis *optionSynopsis) extractMatchModels() schema.MatchModels {
 }
 
 func (synopsis *optionSynopsis) extractModelFromOptionExpression(expr string) (*schema.MatchModel, []string) {
-	context := synopsis.SetContextf("with option expression '%v'", expr)
-	defer synopsis.ReleaseContext(context)
 	args := whitespacesRegex.Split(expr, -1)
 	tokens := ParseOptSynopsis(args)
 	matchModel := synopsis.optionPartsToToMatchModel(tokens)
@@ -123,7 +121,7 @@ func (synopsis *optionSynopsis) optionPartsToToMatchModel(optParts schema.TokenL
 		case *schema.SemanticTokenType:
 			semanticTypes[i] = ttype
 		case *schema.ContextFreeTokenType:
-			synopsis.ReportSkipf("could not extract MatchModel: '%v' token could not be converted to semantic type ; found instead '%v' with candidate '%v' ", token.Value, token.Ttype.Name(), token.SemanticCandidates)
+			synopsis.ReportSkipf("I could not recognize the option expression\n'%v' token is ambiguous since it can match the following candidates: '%v' %", token.Value, token.Ttype.Name(), token.SemanticCandidates)
 			return nil
 		}
 	}
