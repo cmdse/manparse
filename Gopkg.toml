@@ -50,6 +50,7 @@
   name = "github.com/cmdse/core"
   revision = "b86ed61fcd45b926ebbe11b58042af3a86945a0d"
 
+
 [[constraint]]
-  name = "github.com/emirpasic/gods"
-  revision = "b2394dfbb6314eeb616db55d1e01928f287da4b4"
+  name = "github.com/fatih/color"
+  version = "1.6.0"
