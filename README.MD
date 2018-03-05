@@ -13,6 +13,6 @@
 
 `manparse` is a tool to extract a program interface model from man-pages. It uses doclifter from Eric S. Raymond which converts man pages to DocBook xml files. Those files already hold a good level of semantics, and `manparse` will do its best to grab as much information as possible. The program interface model should be serialized to be consumed by other tools. Serialization format has not yet been chosen but it will likely be JSON + JSON Schema.
 
-See documentation in [cmdse.github.io](https://cmdse.github.io/pages/manparse.html).
+See documentation in [cmdse.github.io](https://cmdse.github.io/pages/manparse-cli.html).
 
 Also, visit [the guesses list reference](/GUESSES.MD) to see how `manparse` handle ambiguous scenario.
